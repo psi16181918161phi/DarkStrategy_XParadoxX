@@ -74,6 +74,9 @@ documented?" without an immediate, authoritative answer.
 1.6.1.1. 0000_documentation_standards.txt — binding documentation contract for the entire
 repository; not topical to the game itself.
 1.6.1.2. 000_index.txt — this document.
+1.6.1.3. 0001_natively_ai_prompt.txt — the opening-day master prompt for submission to
+Natively AI at the LabLab AI Factory hackathon, synthesized from the full reconciled canon
+in Sections 1.6.2-1.6.6 below.
 
 1.6.2. Design and Rules Documents
 1.6.2.1. 001_game_concept.txt — brand identity, genre definition, elevator pitch, MVP scope.
@@ -118,6 +121,7 @@ conventions for all Python identifiers.
 |---|------|-------|--------------------|
 | 0000 | 0000_documentation_standards.txt | Meta | Pre-existing, authoritative |
 | 000 | 000_index.txt | Meta | Compliant (this revision) |
+| 0001 | 0001_natively_ai_prompt.txt | Meta | Compliant (added this revision) |
 | 001 | 001_game_concept.txt | Design | Compliant (this revision) |
 | 002 | 002_game_aesthetics.txt | Design | Compliant (this revision) |
 | 003 | 003_game_philosophy.txt | Design | Compliant (this revision) |
@@ -195,3 +199,4 @@ test-tier documents).
 | Version        | Date | Author (Agent/Role) | Change Description | Type |
 |----------------|------|----------------------|---------------------|------|
 | 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation of master index registering all 25 files in game_specifications/. | Major |
+| 2026.00.01.00 | 2026-07-30 | Documentation Agent | Registered 0001_natively_ai_prompt.txt (opening-day Natively AI master prompt for the LabLab AI Factory hackathon) in the Document Registry (1.6.1) and Summary Table (1.7). | Minor |

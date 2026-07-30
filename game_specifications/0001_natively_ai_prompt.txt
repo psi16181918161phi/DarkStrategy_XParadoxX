@@ -1,0 +1,557 @@
+1. Natively AI Opening-Day Master Prompt (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Hackathon Context and Timeline
+1.7. How to Use This Document
+1.8. The Master Prompt (Copy-Paste Block)
+1.8.1. Project Identity
+1.8.2. Mission and Target Platform
+1.8.3. Core Game Rules — Board, Pieces, Movement
+1.8.4. Combat Resolution
+1.8.5. Turn Structure
+1.8.6. Territories and Economy
+1.8.7. Cards
+1.8.8. Victory Conditions
+1.8.9. User Interface
+1.8.10. Visual Style
+1.8.11. Software Architecture
+1.8.12. AI Adviser ("Consult the Oracle")
+1.8.13. Persistence
+1.8.14. Testing and Debug Panel
+1.8.15. Delivery Priority
+1.8.16. Explicit Non-Goals
+1.9. Day-by-Day Pacing Guide for the Hackathon Week
+1.10. Bounded Follow-Up Prompt Discipline
+1.11. Summary Table
+1.12. Reconciliation Table
+1.13. Risk and Mitigation Table
+1.14. Roles and Responsibilities (RACI)
+1.15. Conclusion
+1.16. References and Citations
+1.17. Changelog Table
+
+1.1. Abstract
+This document is the single, submission-ready master prompt to be pasted into Natively AI on
+the opening day of the LabLab AI Factory hackathon (2026-08-03 through 2026-08-10) to
+scaffold and generate the initial vertical slice of X Paradox X. It is assembled entirely
+from the locked canon already established across game_specifications/001_game_concept.txt
+through game_specifications/024_..._naming_conventions.txt (see References, Section 1.16),
+so that the team can paste one internally consistent prompt on day one instead of discovering
+contradictions between documents mid-generation. This document introduces no new game
+mechanics, invents no new numeric values, and declares no new hallucination-envelope
+invocations; it is strictly a synthesis and restatement of already-ratified canon, formatted
+for direct submission to a code-generation tool.
+
+1.2. Key Words
+Natively AI, LabLab AI Factory, hackathon, master prompt, opening day, X Paradox X, X Dark X,
+Dark Strategy, vertical slice, day-by-day pacing, bounded follow-up prompts, delivery
+priority.
+
+1.3. Executive Summary
+The LabLab AI Factory hackathon runs one week, 2026-08-03 through 2026-08-10. This document
+gives the team a single, copy-paste-ready master prompt (Section 1.8) reflecting the fully
+reconciled current canon — Company X Dark X, Genre Dark Strategy (DS), Title X Paradox X,
+variable square board with standard chess pieces, a standard 52-card ability deck, dice-based
+combat, territory economy, three victory conditions, a two-variant palette, and a Python
+backend architecture with a decoupled rules engine — plus a day-by-day pacing guide
+(Section 1.9) and a discipline for bounded follow-up prompts (Section 1.10) so that later-week
+iteration requests to Natively AI stay narrow and do not silently redesign already-generated
+work, mirroring the original ideation session's own warning against unbounded prompts such as
+"make the game cooler."
+
+1.4. Key Findings
+1.4.1. This document supersedes, for prompt-submission purposes, the earlier draft master
+prompt captured in chatGPT_records/chat_record_30072026.md Section 8, which used the
+now-superseded working brand ("X Paradox," genre "eXtended Strategy Game (XSG)"), a fixed 6x6
+board, four bespoke units (Crown/Knight/Scout/Architect), and a bespoke 24-card deck; every
+one of those four elements has since been explicitly revised per the Reconciliation Table in
+017_game_rules.txt Section 1.12 and 001_game_concept.txt Section 1.8.
+1.4.2. The hackathon window is exactly seven days (2026-08-03 to 2026-08-10 inclusive);
+Section 1.9 maps the five delivery priorities already defined in Section 1.8.15 onto that
+window so the team knows what must be true by the end of each day.
+1.4.3. The master prompt in Section 1.8 is written to be submitted whole, in one piece, on
+day one (2026-08-03), per the original ideation session's own guidance to "avoid numerous
+iterations with Natively AI."
+1.4.4. All numeric game-balance values quoted in this document (piece stats, card magnitude
+tiers, upgrade costs, victory thresholds) are cited, not invented here; their original
+hallucination-envelope declarations remain attached to 017_game_rules.txt Sections 1.7.2,
+1.7.4, and 1.10.3 and are not re-declared or re-bounded by this document.
+1.4.5. This document itself introduces one new, narrowly-scoped piece of process guidance —
+the day-by-day pacing table in Section 1.9 — which is operational/scheduling content, not
+game-mechanic content, and therefore falls outside the hallucination-envelope requirement per
+0000_documentation_standards.txt Section 1.4.4.1's distinction between game-affecting claims
+and ordinary engineering/process targets.
+
+1.5. Philosophical Preamble
+An opening-day prompt is the single highest-leverage artifact of a one-week hackathon: every
+ambiguity left unresolved in it is an ambiguity Natively AI will resolve on the team's behalf,
+almost certainly not the way the team would have chosen, and almost certainly at the cost of a
+day's worth of regeneration. Freezing the specification corpus before writing this prompt —
+exactly as 001_game_concept.txt Section 1.5 frames a concept document as "the deed to a
+territory not yet built" — is what allows the team to spend the week's seven days building and
+polishing a vertical slice, rather than repeatedly re-explaining what the game is.
+
+1.6. Hackathon Context and Timeline
+1.6.1. Event: LabLab AI Factory hackathon.
+1.6.2. Duration: one week, 2026-08-03 (Monday) through 2026-08-10 (Monday), inclusive.
+1.6.3. Required platform: Natively AI (code-generation/scaffolding tool), per
+015_game_deployment.txt Section 1.8.
+1.6.4. Submission target: this repository (DarkStrategy_XParadoxX), a py.typed Python
+package, is the authoritative backend implementation target, per 015_game_deployment.txt
+Section 1.8.1 and 006_game_scaffolding.txt Section 1.6.
+1.6.5. Team: a separate team from the user's prior OpenAI Dev Week and AMD Hackathon Act II
+teams, per chatGPT_records/chat_record_30072026.md Section 0 (original framing).
+
+1.7. How to Use This Document
+1.7.1. On the morning of 2026-08-03, submit the entire Section 1.8 block to Natively AI as
+the first prompt, in one piece, before requesting any incremental change.
+1.7.2. Do not paraphrase, shorten, or "improve" Section 1.8 before submission; it is already
+reconciled against the full specification corpus.
+1.7.3. After initial generation, all further requests to Natively AI must follow the bounded
+follow-up prompt discipline in Section 1.10, never a broad, open-ended request.
+1.7.4. If Natively AI's generated output conflicts with any statement in Section 1.8, the
+specification corpus (game_specifications/001 through 024) remains authoritative; file a
+reconciliation note rather than silently accepting the generated deviation, per
+0000_documentation_standards.txt Section 1.6.5.3.
+
+1.8. The Master Prompt (Copy-Paste Block)
+The following text (Sections 1.8.1 through 1.8.16) is the literal content to submit to
+Natively AI on opening day, as a single unbroken submission.
+
+1.8.1. Project Identity
+```
+PROJECT NAME
+X Paradox X
+
+COMPANY
+X Dark X
+
+GENRE
+Dark Strategy (DS) — a house genre blending positional tactics, resource/territory economy,
+card-driven ability systems, and bounded randomness.
+
+TAGLINE
+Own the Board. Break the Rules.
+
+PROJECT TYPE
+A polished two-player digital tabletop strategy game prototype, submitted to the LabLab AI
+Factory hackathon (2026-08-03 to 2026-08-10).
+```
+
+1.8.2. Mission and Target Platform
+```
+MISSION
+Build a playable local pass-and-play game combining chess-piece positional tactics, a
+standard 52-card ability deck, six-sided-dice combat, and territory-driven economy on a
+configurable square board. The project must prioritize functional correctness, clear state
+transitions, and visual polish over feature quantity.
+
+TARGET
+Create a responsive web-rendered UI backed by a Python backend (this repository,
+DarkStrategy_XParadoxX, a py.typed package) that works well in a desktop browser and adapts
+to mobile landscape orientation. Do not require user accounts, payments, online multiplayer,
+cloud synchronization, or social features.
+```
+
+1.8.3. Core Game Rules — Board, Pieces, Movement
+```
+BOARD
+The board is always square: N by N tiles, N selectable at match setup from {4, 6 (default),
+8, custom}, with a hard minimum of N=4. Tile composition scales proportionally from the N=6
+baseline (2 home territories, 10 capturable territories, 8 impassable/unstable tiles, 16
+ordinary tiles), with exactly 2 home territories (one per player) at every size. The layout
+remains symmetrical for both players at every supported size.
+
+PIECES
+Each player uses a standard chess piece set, scaled to board size, using unmodified real
+chess movement legality (Rook orthogonal any distance, Bishop diagonal any distance, Queen
+any direction any distance, King one square any direction, Knight L-shaped jump, Pawn one
+square forward — two on its first move — with diagonal capture), constrained by board edges
+and impassable/unstable tiles.
+
+Piece-count scaling by board size:
+- 4x4: 1 King, 1 Queen, 1 Rook, 1 Bishop, 1 Knight, 2 Pawns
+- 6x6 (default): 1 King, 1 Queen, 1 Rook, 1 Bishop, 1 Knight, 4 Pawns
+- 8x8: 1 King, 1 Queen, 2 Rooks, 2 Bishops, 2 Knights, 8 Pawns
+- Custom: scaled proportionally to the nearest supported tier above, rounded down
+
+Piece combat stat-blocks (invented for dice-based combat; real chess pieces carry no native
+HP/Attack/Defence values):
+| Piece  | Attack | Defence | Health |
+|--------|--------|---------|--------|
+| King   | 2      | 3       | 6      |
+| Queen  | 4      | 2       | 5      |
+| Rook   | 3      | 3       | 5      |
+| Bishop | 2      | 2       | 4      |
+| Knight | 3      | 2       | 4      |
+| Pawn   | 1      | 1       | 2      |
+```
+
+1.8.4. Combat Resolution
+```
+COMBAT
+A piece may attack an adjacent enemy during the Action phase.
+attacker total = attacker Attack + one six-sided die
+defender total = defender Defence + one six-sided die
+If attacker total is higher, the defender loses 2 health.
+If tied, both pieces lose 1 health.
+If defender total is higher, the attacker loses 1 health.
+Remove a piece from the board at 0 health.
+Show both die results and the combat outcome in a modal and in the event log.
+```
+
+1.8.5. Turn Structure
+```
+TURN PHASES
+Every turn proceeds through five phases, displayed prominently and enforced by the rules
+engine:
+1. Draw — draw one card from the shared 52-card deck.
+2. Income — gain one credit per owned territory.
+3. Move — move one piece (may be skipped).
+4. Action — attack, capture, build an upgrade, or play a card (may be skipped).
+5. End Turn — resolve effects, autosave, and pass control.
+Draw and Income may never be skipped.
+```
+
+1.8.6. Territories and Economy
+```
+TERRITORIES
+Ending movement on an undefended neutral territory captures it. An opposing territory is
+captured by removing its defending piece, or by occupying it while no enemy piece remains on
+the tile. Each controlled territory provides 1 credit during Income. A territory held for
+three consecutive turns provides 1 Dominion Point.
+
+UPGRADES
+Only a Bishop may purchase one upgrade for its currently controlled territory. Each territory
+may hold only one upgrade.
+| Upgrade  | Cost | Effect                                                     |
+|----------|------|-------------------------------------------------------------|
+| Fortress | 3    | Defending occupant gains +1 Defence                        |
+| Market   | 3    | Territory produces +1 credit                               |
+| Relay    | 2    | A friendly piece beginning movement here gains +1 movement |
+```
+
+1.8.7. Cards
+```
+CARDS
+Use a single standard 52-card deck (4 suits x 13 ranks, no jokers), shared by both players.
+
+Suit maps to ability class:
+- Hearts = Defence
+- Spades = Attack
+- Diamonds = Economy
+- Clubs = Chaos
+
+Rank maps to effect magnitude within the drawn suit's class:
+| Rank Range | Tier   | Effect Magnitude                                                  |
+|------------|--------|--------------------------------------------------------------------|
+| 2-6        | Low    | 1 unit (e.g. 1 damage, 1 credit, 1 HP restored)                    |
+| 7-10       | Medium | 2 units (e.g. 2 damage, 2 credits, 2 HP restored)                  |
+| J, Q, K    | High   | 3 units, or one bounded special effect (reroll a die, swap two unoccupied non-home tiles) |
+| Ace        | Wild   | Player's choice of any one tier's effect within the drawn suit's class |
+
+Cards must be represented as structured data, not hardcoded UI-specific logic. Validate all
+targets before resolving a card. Render each card with its real suit/rank iconography plus a
+secondary small icon indicating the mapped ability class.
+```
+
+1.8.8. Victory Conditions
+```
+VICTORY
+A player wins immediately when any condition is met:
+- Territory majority: control more than half of the board's capturable territories.
+- King capture: the opposing King is reduced to 0 health and removed from the board.
+- Dominion Points threshold: a player reaches 20 Dominion Points (default; board-size scaling
+  is a flagged future revision, not a silent change).
+Display a Results screen explaining the winning condition, with Play Again and Main Menu
+options. No action on the Results screen may resume the finished match.
+```
+
+1.8.9. User Interface
+```
+SCREENS
+Main Menu, How to Play, Game, Settings, Results.
+
+Main Menu: X Paradox X logo, Play (prompts board-size selection), How to Play, Settings,
+Credits, and Continue Game (shown only when a valid autosave exists).
+
+Game screen (desktop/landscape): a three-column layout — left column shows selected-unit
+stats/abilities/upgrade options; center column shows the board; right column shows the
+turn/event log. A top bar shows both players' credits and Dominion Points plus the current
+turn number and phase name. A bottom bar shows the card hand and an End Turn control.
+
+Game screen (narrow/mobile): the board occupies the visual center; player status data
+collapses into a top bar; the card hand becomes a horizontally scrollable bottom tray;
+piece/territory/card details open in a bottom sheet; the turn/event log opens via an explicit
+button.
+
+INTERACTION MODEL
+First tap/click selects a piece: valid movement tiles pulse softly, attackable enemies
+receive a crosshair icon, invalid tiles remain unchanged. Tapping/clicking a valid
+destination previews the action; a second tap/click confirms it. This two-step
+select-then-confirm model applies identically to movement, attacks, card targeting, and
+upgrade purchases. No irreversible action may be performed from a single, un-previewed input.
+Deselecting cancels the pending action without side effects.
+
+CONTEXT MENUS
+Piece Context Menu (friendly piece, Action phase): Move, Attack (if a legal target exists),
+Build Upgrade (Bishop only), Cancel.
+Territory Context Menu (owned, undefended territory, Action phase): Purchase Upgrade (if
+affordable and no existing upgrade), View Territory Info, Cancel.
+Card Context Menu (hand card): Inspect, Play (opens target selection if required), Cancel.
+Every context-menu option must be generated from the rules engine's legal-action query, never
+hardcoded per screen.
+
+EVENT LOG
+Record every action as a structured event and display it in human-readable form: movement,
+captures, cards, purchases, dice rolls, damage, removals, income, phase changes, and victory.
+
+SETTINGS
+Palette-variant toggle (Dark/Light), Reset Match (two-step confirm), Debug Panel access
+(development builds only).
+```
+
+1.8.10. Visual Style
+```
+VISUAL STYLE
+Ship two selectable palette variants; both share one rose-gold accent/border color.
+
+Variant A (Dark):
+- Background: #000000
+- Primary text: #FFACE9
+- Accent/border: #B76E79
+
+Variant B (Light/Inverted):
+- Background: #FFACE9
+- Primary text: #000000
+- Accent/border: #B76E79
+
+The active variant is a per-session Settings toggle, not tied to player identity or match
+state. #B76E79 is used identically in both variants for piece/tile borders, selection
+outlines, dividers, card frames, and the game logo mark.
+
+Typography: one geometric display face for headings (uppercase, generous letter-spacing); one
+highly readable sans-serif for interface text (sentence case); monospaced text reserved for
+the event/turn log and board coordinates; numeric displays (credits, health, Dominion Points)
+use tabular figures so values do not visually reflow.
+
+Tile/piece/card visual language: tile state (neutral, Player One, Player Two, selected, valid
+destination, attackable, blocked, upgraded, temporarily affected) is communicated via fill
+color plus a distinct border treatment plus a small state icon — never color alone. Chess
+pieces render as sharp, geometric silhouettes (not photorealistic); each piece's rank must
+remain instantly distinguishable by silhouette alone, independent of palette variant. Playing
+cards use real suit/rank iconography plus a secondary ability-class icon. Territory upgrades
+(Fortress, Market, Relay) each receive one small, consistent glyph on the owning tile.
+
+Motion: restrained. Selection glows, tile pulses, and dice rolls are permitted; continuous or
+large-scale motion, screen shake, and full-surface gradients are not.
+
+Avoid: copyrighted Monopoly or chess visual assets, photorealistic characters, generic
+medieval fantasy, excessive gradients, excessive animation, visual clutter, tiny text.
+
+Logo: wordmark "X PARADOX X" flanking an abstract fractured-die / impossible-geometry board
+mark combining four crossing movement paths, a six-sided die, a card silhouette, and an
+X-shaped territorial grid, rendered in #B76E79.
+```
+
+1.8.11. Software Architecture
+```
+SOFTWARE ARCHITECTURE
+Separate game logic from presentation. The rules engine is the sole authority over state; the
+UI displays game state, it does not contain the rules.
+
+Structure the Python backend as:
+src/game/       game_state, turn_engine, movement_engine, combat_engine, territory_engine,
+                card_engine, upgrade_engine, victory_engine, event_log, rng_service
+src/data/       pieces, cards, territories, upgrades
+src/services/   ai_adviser (advisory-only), persistence (autosave/New/Continue/Reset)
+src/api/        commands (the command schema for the frontend to invoke)
+tests/          one mirrored test package per production package above
+
+Cross-package imports flow one direction only: data -> game -> services/api; reverse imports
+are disallowed.
+
+All player actions must be represented as commands: MOVE_PIECE, ATTACK_PIECE, PLAY_CARD,
+PURCHASE_UPGRADE, SKIP_PHASE, END_TURN. The rules engine validates a command before changing
+state. The interface must never directly alter health, ownership, credits, cards, turns, or
+victory status.
+
+Implement seeded random numbers so a match can be replayed during testing; show the active
+seed in the debug panel.
+```
+
+1.8.12. AI Adviser ("Consult the Oracle")
+```
+AI ADVISER
+Add a button labelled "Consult the Oracle." The adviser reads a compact, serialized game-state
+summary (board size, piece positions and HP, territory ownership, credits, Dominion Points,
+the requesting player's current hand only, turn/phase) and returns:
+- one recommended legal move
+- one alternative legal move
+- a concise, plain-language explanation
+- a risk rating of Low, Moderate, or High
+
+The adviser must never mutate game state. Every adviser-suggested command must be validated
+through the same rules engine as a human-issued command before it can be previewed to the
+player, via the same two-step confirm model. The adviser must not introduce new rules, cards,
+pieces, or mechanics not defined above. If no external AI service is configured or reachable,
+use a deterministic, rules-based heuristic adviser (e.g. prefer moves that capture an
+undefended territory, then moves that avoid an unfavorable combat trade) so the feature
+remains demonstrable offline.
+```
+
+1.8.13. Persistence
+```
+PERSISTENCE
+Autosave the match at the end of every End Turn phase, and immediately before a graceful
+application shutdown. Save data includes: board size and layout, piece positions and HP,
+territory ownership and upgrades, each player's credits and Dominion Points, each player's
+hand and remaining deck order, current turn number and phase, and the RNG seed.
+
+Provide New Game, Continue Game (shown only when a valid autosave exists), and Reset Match
+(two-step confirm; retains per-session statistics) flows. No backend database or network
+service is required for this MVP.
+```
+
+1.8.14. Testing and Debug Panel
+```
+TESTING
+Generate automated tests for: legal and illegal movement per piece type, blocked paths,
+turn-phase enforcement, territory capture, income calculation, combat win/tie/loss, piece
+removal, every card's suit/rank effect, every upgrade, victory by territory majority, victory
+by King capture, victory by Dominion Points, save and restore, deterministic seeded dice, and
+prevention of actions after victory.
+
+Include a debug panel, available only in development builds, that can: change the random
+seed, assign credits, assign cards, set piece health, change territory ownership, advance
+phases, trigger each victory condition, and reset the board.
+```
+
+1.8.15. Delivery Priority
+```
+DELIVERY PRIORITY
+Priority 1: playable deterministic match (board, pieces, movement, combat, one victory path).
+Priority 2: complete rules and validation (all cards, all upgrades, all three victory paths).
+Priority 3: clean responsive interface (desktop and narrow/mobile layouts, context menus).
+Priority 4: visual polish (both palette variants, typography, tile/piece/card visual language,
+restrained motion) and the How to Play screen.
+Priority 5: AI Adviser ("Consult the Oracle").
+
+Do not add unspecified features. Do not reinterpret the rules above. Before making a major
+architectural change, preserve all existing working game behavior.
+```
+
+1.8.16. Explicit Non-Goals
+```
+NON-GOALS (do not build these for this hackathon)
+No user accounts, authentication, or profiles. No online/networked multiplayer. No
+real-money economy or monetization. No procedurally generated (non-deterministic-layout)
+boards. No fully autonomous AI game-mastering that mutates state directly. No open-ended,
+AI-generated rules during a live match — any AI feature remains advisory-only, permanently,
+not just for this hackathon. No castling, en passant, pawn promotion, or full
+check/checkmate legality nuance; King capture at 0 health is the sole King-related win
+condition.
+```
+
+1.9. Day-by-Day Pacing Guide for the Hackathon Week
+| Day | Date | Focus | End-of-Day Target |
+|-----|------|-------|----------------------|
+| 1 | 2026-08-03 (Mon) | Submit Section 1.8 master prompt; scaffold repository | Generated project skeleton matches 006_game_scaffolding.txt layout; board renders at default 6x6 |
+| 2 | 2026-08-04 (Tue) | Priority 1 | One full deterministic turn cycle playable: move, attack, capture, income |
+| 3 | 2026-08-05 (Wed) | Priority 1 continued | At least one victory condition (King capture) fully working end-to-end |
+| 4 | 2026-08-06 (Thu) | Priority 2 | All cards and all upgrades implemented and tested; territory-majority and Dominion Points victories working |
+| 5 | 2026-08-07 (Fri) | Priority 3 | Desktop and narrow/mobile layouts complete; context menus wired to the rules engine's legal-action query |
+| 6 | 2026-08-08 (Sat) | Priority 4 | Both palette variants shipped; typography, tile/piece/card visual language, and How to Play screen complete |
+| 7 | 2026-08-09 (Sun) | Priority 5 + hardening | AI Adviser ("Consult the Oracle") with heuristic fallback; full automated test pass; debug panel gated to development builds only |
+| 8 | 2026-08-10 (Mon) | Submission | Production build (debug panel disabled per 015_game_deployment.txt Section 1.6); final playtest; submit to LabLab AI Factory |
+
+1.10. Bounded Follow-Up Prompt Discipline
+1.10.1. Every follow-up prompt to Natively AI after day one must name the exact file(s),
+component(s), or screen(s) to modify, and must explicitly state what must remain unchanged.
+1.10.2. Use the pattern established in the original ideation session: "Modify only the
+combat-result modal. Keep all game rules, state structures, board components, colours, and
+navigation unchanged. Add: [specific, itemized change]."
+1.10.3. Never submit an open-ended aesthetic or scope request (e.g. "make the game cooler")
+per chatGPT_records/chat_record_30072026.md Section 9's explicit warning that such prompts
+invite broad, uncontrolled regeneration.
+1.10.4. Any follow-up prompt that would change a numeric game-balance value already declared
+under a hallucination-envelope invocation in 017_game_rules.txt (Sections 1.7.2, 1.7.4,
+1.10.3) must be routed back through this specification corpus for an explicit, reviewed
+envelope update before being sent to Natively AI, never patched ad hoc in a follow-up prompt.
+
+1.11. Summary Table
+| Attribute | Value |
+|-----------|-------|
+| Hackathon | LabLab AI Factory |
+| Window | 2026-08-03 to 2026-08-10 (7 days + submission day) |
+| Platform | Natively AI |
+| Submission target | This repository (DarkStrategy_XParadoxX) |
+| Prompt submission mode | Whole, single-piece, on day one |
+| Company / Genre / Title | X Dark X / Dark Strategy (DS) / X Paradox X |
+| Follow-up prompt mode | Bounded, itemized, file/component-scoped only |
+
+1.12. Reconciliation Table
+| Topic | Original Draft Prompt (chat_record_30072026.md §8) | This Document's Master Prompt (§1.8) | Justification |
+|-------|--------------------------------------------------------|------------------------------------------|----------------|
+| Title/Genre | "X Paradox" / "eXtended Strategy Game (XSG)" | "X Paradox X" / "Dark Strategy (DS)" | 001_game_concept.txt §1.8 |
+| Board | Fixed 6x6 | Variable 4x4/6x6(default)/8x8/custom, minimum 4x4 | 017_game_rules.txt §1.6, §1.12 |
+| Pieces | Crown, Knight, Scout, Architect (4 bespoke) | Standard chess pieces (King, Queen, Rook, Bishop, Knight, Pawn), scaled by board size | 017_game_rules.txt §1.7, §1.12 |
+| Cards | Bespoke 24-card deck (12 unique x2) | Standard 52-card deck, suit=class, rank=magnitude | 017_game_rules.txt §1.10, §1.12 |
+| Palette | Single fixed dark palette | Two selectable variants (Dark/Light), shared accent | 002_game_aesthetics.txt §1.11 |
+| Combat resolution | Attack+d6 vs Defence+d6, win/tie/loss table | Unchanged | 017_game_rules.txt §1.7.3 |
+| Turn phases | Draw/Income/Move/Action/End Turn | Unchanged | 017_game_rules.txt §1.8 |
+| Hackathon timeline | Not specified in the original draft | 2026-08-03 to 2026-08-10, day-by-day pacing added | Section 1.9 of this document, new operational content |
+
+1.13. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Team submits an outdated version of the prompt (old title/genre/pieces/cards) from the original chat record instead of this document | Medium | High | This document explicitly supersedes chat_record_30072026.md §8 for prompt-submission purposes (Section 1.4.1) |
+| Natively AI's generated output silently drifts from the specification corpus over the week | Medium | High | Section 1.7.4 mandates the specification corpus remains authoritative; deviations are reconciled, not accepted silently |
+| Broad, unbounded follow-up prompts undo earlier days' work | Medium | High | Section 1.10 bounded follow-up prompt discipline, carried forward from the original ideation session's own guidance |
+| Seven-day window slips due to a Priority 1 blocker | Medium | High | Section 1.9 front-loads Priority 1 to days 1-3, leaving days 4-8 as buffer/lower-priority work if day 1-3 slips |
+| Debug panel accidentally left enabled in the submitted build | Low | High | Section 1.8.15/1.9 Day 8 explicitly requires the production build (debug panel disabled) before submission, per 015_game_deployment.txt §1.6 |
+
+1.14. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Assemble and maintain the master prompt (1.8) | R | C | A | A/Stakeholder (game owner) |
+| Submit the master prompt to Natively AI on day one | I | I | A/Stakeholder (game owner) | R |
+| Author and send bounded follow-up prompts (1.10) | C | C | A/Stakeholder (game owner) | R |
+| Track day-by-day pacing (1.9) against actual progress | C | C | A/Stakeholder (game owner) | R |
+
+1.15. Conclusion
+This document closes the loop between the game_specifications/ corpus and the first concrete
+action the hackathon team takes with Natively AI: a single, internally reconciled prompt to
+submit on the morning of 2026-08-03, paired with a seven-day pacing guide and a follow-up
+prompt discipline so that later-week iteration never regresses to the same broad,
+uncontrolled requests the original ideation session already warned against.
+
+1.16. References and Citations
+1.16.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14 (structural
+contract).
+1.16.2. Internal: game_specifications/001_game_concept.txt §1.6-1.9 (brand identity, MVP
+scope).
+1.16.3. Internal: game_specifications/002_game_aesthetics.txt §1.6-1.10 (palette,
+typography, visual language).
+1.16.4. Internal: game_specifications/004_game_menu_context_menus.txt §1.6-1.12 (screens,
+layout, interaction model, context menus).
+1.16.5. Internal: game_specifications/006_game_scaffolding.txt §1.6-1.8 (repository layout).
+1.16.6. Internal: game_specifications/016_game_modes.txt §1.6-1.8 (AI Adviser contract).
+1.16.7. Internal: game_specifications/017_game_rules.txt §1.6-1.12 (board, pieces, combat,
+turns, territories, cards, victory conditions; authoritative mechanics source).
+1.16.8. Internal: game_specifications/018_future_wishlist_items.txt §1.6-1.9 (explicit
+non-goals).
+1.16.9. Internal: game_specifications/015_game_deployment.txt §1.6-1.8 (build
+configurations, persistence, Natively AI submission target).
+1.16.10. Internal: chatGPT_records/chat_record_30072026.md Sections 7-9 (original
+architecture request, master prompt draft, and follow-up-prompt-minimization guidance,
+2026-07-30) — superseded for prompt-submission purposes per Section 1.4.1 of this document,
+retained as a historical citation.
+
+1.17. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: opening-day Natively AI master prompt synthesized from the full reconciled game_specifications corpus, plus a seven-day hackathon pacing guide and bounded follow-up prompt discipline. | Major |
