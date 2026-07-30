@@ -6,6 +6,8 @@ Must include a conclusion where appropriate.
 Agents must not deviate from said instructions, and checklists of items for CICD, and devOps, and SecDevOps, and MLOps, LLMOps, and AgentOps, and so on. 
 No hallucinations unless specified and within narrow band of 0-1 normalized and uniformed envelope distribution for a specific context and use-case: For example, if the context is about a specific game mechanic, the hallucination should be limited to that mechanic and not extend to unrelated topics. To further drive the point, the specific range or envelop is: 0.3 to 0.6 for the specific game mechanic context.
 
+*** NOTE: No agent must remove any existing texts in any files, and where there are texts, those baselines for what the content should be. *** 
+
 1. Agent Meta-Instructions (Table of Contents)
 1.1. Abstract
 1.2. Key Words
