@@ -1,0 +1,197 @@
+1. Master Index (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Document Registry
+1.6.1. Foundational Documents
+1.6.2. Design and Rules Documents
+1.6.3. Engineering Standards Documents
+1.6.4. Testing and Quality Documents
+1.6.5. Operations Documents
+1.6.6. Data, Logging, and Visualization Documents
+1.7. Summary Table
+1.8. Reconciliation Table
+1.9. Risk and Mitigation Table
+1.10. Roles and Responsibilities (RACI)
+1.11. Conclusion
+1.12. References and Citations
+1.13. Appendix: Cross-Document Dependency Map
+1.14. Changelog Table
+
+1.1. Abstract
+This document is the master index for the game_specifications/ corpus governing X Paradox X,
+the first title published under the X Dark X company banner in the Dark Strategy (DS) genre.
+It enumerates every specification file in this directory, states its purpose, its compliance
+status against game_specifications/0000_documentation_standards.txt, and its dependency
+relationships to sibling documents. This index must be updated whenever a file is added,
+removed, or renumbered, per Section 1.6.7 of 0000_documentation_standards.txt.
+
+1.2. Key Words
+index, registry, X Paradox X, X Dark X, Dark Strategy, DS, document map, cross-reference,
+dependency, compliance status, specification corpus, hackathon, Natively AI, Python backend.
+
+1.3. Executive Summary
+game_specifications/ contains twenty-five files (this index, the documentation-standards
+baseline at 0000, and twenty-three topical specification files numbered 001 through 024).
+Every topical file is either a game-design document (concept, aesthetics, philosophy, menus,
+modes, rules, player statistics, wishlist) or a software-engineering standards document
+(coding standards, scaffolding, virtual environment, testing tiers, CICD, deployment, data
+structures/algorithms, logging, data formats, visualization, modules/imports, naming
+conventions) for the Python backend that implements X Paradox X. This index gives any agent
+or contributor a single entry point to locate the authoritative source for any question about
+the game or its implementation, and to verify that no file has been left empty or non-compliant.
+
+1.4. Key Findings
+1.4.1. The corpus splits cleanly into two functional tracks: Game Design (001-004, 010,
+016-018) and Software Engineering (005-009, 011-015, 019, 023, 024) with three
+cross-cutting technical-standards documents (020, 021, 022) shared by both tracks.
+1.4.2. As of this revision, all twenty-three topical files have been brought into full
+compliance with game_specifications/0000_documentation_standards.txt.
+1.4.3. Five files (005, 008, 020, 021, 022) carried pre-existing baseline notes authored
+before this revision; per 0000_documentation_standards.txt's binding instruction that "no
+agent must remove any existing texts in any files," those notes were preserved verbatim and
+incorporated as the seed content of their respective document bodies.
+1.4.4. This repository (DarkStrategy_XParadoxX, marked with py.typed) is the authoritative
+Python backend implementation target for the LabLab AI Factory / Natively AI hackathon
+submission, not a disposable planning-only artifact.
+1.4.5. Canonical game mechanics were revised during this documentation pass relative to the
+earliest ChatGPT ideation record (chatGPT_records/chat_record_30072026.md); see the
+Reconciliation Table (1.8) and 001_game_concept.txt Section 1.8 for the authoritative diff.
+
+1.5. Philosophical Preamble
+An index is the map of a territory, not the territory itself; yet a strategy game that
+concerns itself with the capture, ownership, and reconciliation of territories owes its own
+documentation the same discipline it demands of its players. To leave a specification file
+empty is to leave a tile unclaimed and undefended on the board of the project itself. This
+index exists so that no contributor — human or agent — ever again asks "where is this
+documented?" without an immediate, authoritative answer.
+
+1.6. Document Registry
+
+1.6.1. Foundational Documents
+1.6.1.1. 0000_documentation_standards.txt — binding documentation contract for the entire
+repository; not topical to the game itself.
+1.6.1.2. 000_index.txt — this document.
+
+1.6.2. Design and Rules Documents
+1.6.2.1. 001_game_concept.txt — brand identity, genre definition, elevator pitch, MVP scope.
+1.6.2.2. 002_game_aesthetics.txt — visual identity, palette variants, typography, UI motifs.
+1.6.2.3. 003_game_philosophy.txt — design philosophy, player-experience principles.
+1.6.2.4. 004_game_menu_context_menus.txt — menu structure, screen flow, context-menu behavior.
+1.6.2.5. 010_game_player_statistics.txt — tracked player/match statistics and their formulas.
+1.6.2.6. 016_game_modes.txt — supported game modes (local pass-and-play, AI adviser, future
+online play).
+1.6.2.7. 017_game_rules.txt — the authoritative rules engine specification (board, pieces,
+cards, combat, territories, upgrades, victory conditions).
+1.6.2.8. 018_future_wishlist_items.txt — deferred/stretch features explicitly out of MVP scope.
+
+1.6.3. Engineering Standards Documents
+1.6.3.1. 005_game_coding_standards.txt — SOLID/ACID/JPL-10/Clean-Code Python standards.
+1.6.3.2. 006_game_scaffolding.txt — repository/package scaffolding layout.
+1.6.3.3. 007_game_virtual_env.txt — Python virtual environment and dependency policy.
+1.6.3.4. 019_game_data_structures_algorithms.txt — canonical data structures and algorithms
+used by the rules engine.
+1.6.3.5. 023_game_modules_imports.txt — module boundaries and import discipline.
+1.6.3.6. 024_game_variable_func_class_decorator_exceptions_naming_conventions.txt — naming
+conventions for all Python identifiers.
+
+1.6.4. Testing and Quality Documents
+1.6.4.1. 008_game_testing.txt — overall testing philosophy and coverage baseline.
+1.6.4.2. 009_game_unit_tests.txt — unit-test scope and conventions.
+1.6.4.3. 011_game_integration_tests.txt — integration-test scope and conventions.
+1.6.4.4. 012_game_perfomance_tests.txt — performance/load-test scope and budgets.
+1.6.4.5. 013_game_end2end_testing.txt — end-to-end/UI-level test scope.
+
+1.6.5. Operations Documents
+1.6.5.1. 014_game_cicd.txt — CI/CD pipeline stages and gates.
+1.6.5.2. 015_game_deployment.txt — deployment targets and release process.
+
+1.6.6. Data, Logging, and Visualization Documents
+1.6.6.1. 020_game_logging_standards.txt — .LOG formatting and logging discipline.
+1.6.6.2. 021_game_data_standards.txt — accepted data interchange formats.
+1.6.6.3. 022_game_visualization_dev_standards.txt — screenshot/diagram inclusion standards.
+
+1.7. Summary Table
+| # | File | Track | Compliance Status |
+|---|------|-------|--------------------|
+| 0000 | 0000_documentation_standards.txt | Meta | Pre-existing, authoritative |
+| 000 | 000_index.txt | Meta | Compliant (this revision) |
+| 001 | 001_game_concept.txt | Design | Compliant (this revision) |
+| 002 | 002_game_aesthetics.txt | Design | Compliant (this revision) |
+| 003 | 003_game_philosophy.txt | Design | Compliant (this revision) |
+| 004 | 004_game_menu_context_menus.txt | Design | Compliant (this revision) |
+| 005 | 005_game_coding_standards.txt | Engineering | Compliant, baseline preserved |
+| 006 | 006_game_scaffolding.txt | Engineering | Compliant (this revision) |
+| 007 | 007_game_virtual_env.txt | Engineering | Compliant (this revision) |
+| 008 | 008_game_testing.txt | Testing | Compliant, baseline preserved |
+| 009 | 009_game_unit_tests.txt | Testing | Compliant (this revision) |
+| 010 | 010_game_player_statistics.txt | Design | Compliant (this revision) |
+| 011 | 011_game_integration_tests.txt | Testing | Compliant (this revision) |
+| 012 | 012_game_perfomance_tests.txt | Testing | Compliant (this revision) |
+| 013 | 013_game_end2end_testing.txt | Testing | Compliant (this revision) |
+| 014 | 014_game_cicd.txt | Operations | Compliant (this revision) |
+| 015 | 015_game_deployment.txt | Operations | Compliant (this revision) |
+| 016 | 016_game_modes.txt | Design | Compliant (this revision) |
+| 017 | 017_game_rules.txt | Design | Compliant (this revision) |
+| 018 | 018_future_wishlist_items.txt | Design | Compliant (this revision) |
+| 019 | 019_game_data_structures_algorithms.txt | Engineering | Compliant (this revision) |
+| 020 | 020_game_logging_standards.txt | Data | Compliant, baseline preserved |
+| 021 | 021_game_data_standards.txt | Data | Compliant, baseline preserved |
+| 022 | 022_game_visualization_dev_standards.txt | Data | Compliant, baseline preserved |
+| 023 | 023_game_modules_imports.txt | Engineering | Compliant (this revision) |
+| 024 | 024_..._naming_conventions.txt | Engineering | Compliant (this revision) |
+
+1.8. Reconciliation Table
+| Prior State | Current State | Status |
+|-------------|----------------|--------|
+| 19 of 23 topical files empty | All 23 topical files fully populated | Reconciled |
+| 5 files (005,008,020,021,022) held only raw baseline notes | Baseline notes preserved verbatim and wrapped in compliant structure | Reconciled |
+| Game brand/genre undecided ("X Paradox" per ChatGPT record) | Locked as Company "X Dark X", Genre "Dark Strategy (DS)", Title "X Paradox X" | Reconciled, see 001_game_concept.txt §1.8 |
+| Board fixed at 6x6 (ChatGPT record) | Variable square board, min 4x4, includes 4x4/6x6/8x8/custom | Reconciled, see 017_game_rules.txt §1.8 |
+| Custom 24-card deck (ChatGPT record) | Standard 52-card deck, suit=class, rank=magnitude | Reconciled, see 017_game_rules.txt §1.8 |
+| Custom units Crown/Knight/Scout/Architect (ChatGPT record) | Standard chess pieces with invented combat stat-blocks | Reconciled, see 017_game_rules.txt §1.8 |
+
+1.9. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Index drifts out of sync as files are edited | Medium | Medium | Update this index in the same edit that adds/removes/renumbers a file (0000 §1.6.7.6 discipline) |
+| Contributor edits a topical file without reading 0000 first | Medium | High | This index links every file back to 0000 in its own front matter |
+| Duplicate or conflicting canon values across files | Low | High | Single source of truth is 017_game_rules.txt for mechanics and 002_game_aesthetics.txt for visuals; all other files cite rather than restate |
+
+1.10. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain this index | R/A | C | A | I |
+| Approve new file additions | C | R | A | I |
+| Resolve cross-document conflicts | R | C/A | A | I |
+
+1.11. Conclusion
+This index closes the gap between "a directory of files" and "a governed specification
+corpus." Every file listed above is now populated, structurally compliant with
+0000_documentation_standards.txt, and cross-referenced. Future additions to
+game_specifications/ must register themselves here before being considered complete.
+
+1.12. References and Citations
+1.12.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14 (structural
+contract).
+1.12.2. Internal: chatGPT_records/chat_record_30072026.md (original game-concept ideation
+session, 2026-07-30).
+1.12.3. Internal: all files listed in Section 1.6.
+
+1.13. Appendix: Cross-Document Dependency Map
+1.13.1. 017_game_rules.txt is upstream of 010, 016, 018, 019 (rules define what statistics,
+modes, wishlist items, and data structures are possible).
+1.13.2. 002_game_aesthetics.txt is upstream of 004 and 022 (visual identity defines menu
+appearance and screenshot standards).
+1.13.3. 005_game_coding_standards.txt is upstream of 006, 007, 019, 023, 024 (coding standards
+frame all subsequent engineering documents).
+1.13.4. 008_game_testing.txt is upstream of 009, 011, 012, 013 (testing philosophy frames all
+test-tier documents).
+1.13.5. 014_game_cicd.txt is upstream of 015 (pipeline gates frame the deployment process).
+
+1.14. Changelog Table
+| Version        | Date | Author (Agent/Role) | Change Description | Type |
+|----------------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation of master index registering all 25 files in game_specifications/. | Major |

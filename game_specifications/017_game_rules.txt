@@ -1,0 +1,277 @@
+1. Game Rules (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Board
+1.7. Pieces and Movement
+1.7.1. Piece Roster and Movement Rules
+1.7.2. Combat Stat-Blocks (Hallucination Envelope Declared)
+1.7.3. Combat Resolution
+1.7.4. Upgrade-Building Role Assignment (Hallucination Envelope Declared)
+1.8. Turn Structure
+1.9. Territories
+1.9.1. Capture Rules
+1.9.2. Income and Dominion Points
+1.9.3. Upgrades
+1.10. Cards
+1.10.1. Standard 52-Card Deck Structure
+1.10.2. Suit-to-Class Mapping
+1.10.3. Rank-to-Magnitude Mapping (Hallucination Envelope Declared)
+1.11. Victory Conditions
+1.12. Reconciliation with Prior Ideation
+1.13. Summary Table
+1.14. Reconciliation Table
+1.15. Risk and Mitigation Table
+1.16. Roles and Responsibilities (RACI)
+1.17. Conclusion
+1.18. References and Citations
+1.19. Changelog Table
+
+1.1. Abstract
+This document is the single authoritative rules engine specification for X Paradox X: board
+sizing, standard chess pieces and their invented combat stat-blocks, the standard 52-card
+ability deck, dice-based combat resolution, territory/upgrade economy, and the three victory
+conditions. Every other document in this corpus that references game mechanics must cite
+this document rather than restate or reinterpret its content, per 001_game_concept.txt
+Section 1.15.3.
+
+1.2. Key Words
+board, chess pieces, movement, combat, dice, 52-card deck, suit, rank, territory, income,
+Dominion Points, upgrade, victory condition, hallucination envelope.
+
+1.3. Executive Summary
+X Paradox X is played on a variable-size square board (minimum 4x4) by two players using
+standard chess piece sets, a shared standard 52-card deck reinterpreted as an ability system
+(suit = ability class, rank = magnitude), and six-sided-dice combat resolution, layered over
+Monopoly-style territory ownership, income, and Dominion Points. Victory is achieved by
+territory majority, King capture, or reaching a Dominion Points threshold. This document
+declares, per game_specifications/0000_documentation_standards.txt Section 1.6.6, every place
+where content was necessarily invented (piece combat stats, upgrade-role assignment, card
+rank magnitudes) rather than sourced from prior ideation, each scoped to its specific
+mechanic with an explicit envelope range and rationale.
+
+1.4. Key Findings
+1.4.1. Board size is a per-match, player-selected setting: 4x4, 6x6 (default), 8x8, or a
+custom N x N, with a hard minimum of 4x4 and a requirement that the board always be square.
+1.4.2. Pieces are standard chess pieces (King, Queen, Rook, Bishop, Knight, Pawn) using real
+chess movement rules, each assigned an invented HP/Attack/Defence stat-block for dice-based
+combat and territory capture; this is a declared hallucination-envelope invocation (Section
+1.7.2).
+1.4.3. The card system uses a standard 52-card deck (no jokers); suit maps to ability class
+(Hearts=Defence, Spades=Attack, Diamonds=Economy, Clubs=Chaos) and rank maps to effect
+magnitude, the latter being a declared hallucination-envelope invocation (Section 1.10.3).
+1.4.4. Combat resolution (attacker Attack+d6 vs defender Defence+d6; win/tie/loss damage
+table) is retained unchanged from the original ideation session as a frozen baseline.
+1.4.5. Victory is reached by any of three independent paths: territory majority, King
+capture, or a Dominion Points threshold, both scaled where noted to the selected board size.
+
+1.5. Philosophical Preamble
+Rules are the one place in this corpus where creativity must be most tightly bounded, because
+the rules engine is the sole authority over state (003_game_philosophy.txt Section 1.6.1).
+Where this document invents new content — chess-piece combat statistics that do not exist in
+real chess, or magnitudes for playing-card ranks that do not exist in a standard deck — it
+says so explicitly, in the narrow, declared hallucination envelope required by
+0000_documentation_standards.txt Section 1.6.6, so that no invented number is ever mistaken
+for a sourced one.
+
+1.6. Board
+1.6.1. The board is always square: N x N tiles, N selectable at match setup from {4, 6, 8,
+custom}, with a hard minimum of N=4 (below which the game is judged unplayably cramped, per
+explicit user direction in the 2026-07-30 clarification session). There is no stated hard
+maximum, but boards are expected to remain small enough for a single-screen digital tabletop
+view.
+1.6.2. Tile composition scales proportionally from the N=6 baseline established in the
+original ideation session (2 home territories, 10 capturable territories, 8 impassable/
+unstable tiles, 16 ordinary tiles, total 36 tiles for N=6): each category is scaled to the
+same approximate proportion of the new tile total (N^2) and rounded to the nearest whole
+tile, with home territories fixed at exactly 2 (one per player) regardless of N.
+1.6.3. The board layout remains symmetrical for both players at every supported size, per
+the original ideation session's balancing guidance.
+
+1.7. Pieces and Movement
+
+1.7.1. Piece Roster and Movement Rules
+Each player uses a standard chess piece set, scaled to board size per Section 1.7.1.1, using
+unmodified real chess movement legality (orthogonal any distance for the Rook, diagonal any
+distance for the Bishop, any direction any distance for the Queen, one square any direction
+for the King, the L-shaped jump for the Knight, one square forward - two on its first move -
+with diagonal capture for the Pawn), constrained additionally by the board edges and by any
+impassable/unstable tiles defined in Section 1.6.2.
+1.7.1.1. Piece-count scaling by board size:
+| Board Size | King | Queen | Rook | Bishop | Knight | Pawn |
+|------------|------|-------|------|--------|--------|------|
+| 4x4 | 1 | 1 | 1 | 1 | 1 | 2 |
+| 6x6 (default) | 1 | 1 | 1 | 1 | 1 | 4 |
+| 8x8 | 1 | 1 | 2 | 2 | 2 | 8 |
+| Custom | Scaled proportionally to the nearest supported tier above, rounded down | | | | | |
+
+1.7.2. Combat Stat-Blocks (Hallucination Envelope Declared)
+Hallucination envelope invocation: context = "X Paradox X chess-piece combat stat-block";
+declared range = 0.4 (moderate-low, since values must remain roughly proportionate to each
+piece's real-chess power level to stay intuitive); rationale = real chess pieces carry no
+native HP/Attack/Defence values, so these numbers are invented to enable dice-based combat
+while preserving each piece's relative real-chess power ranking (Queen > Rook ~ Bishop >
+Knight > Pawn, King precious but not weak).
+| Piece | Attack | Defence | Health |
+|-------|--------|---------|--------|
+| King | 2 | 3 | 6 |
+| Queen | 4 | 2 | 5 |
+| Rook | 3 | 3 | 5 |
+| Bishop | 2 | 2 | 4 |
+| Knight | 3 | 2 | 4 |
+| Pawn | 1 | 1 | 2 |
+
+1.7.3. Combat Resolution
+Retained unchanged from the original ideation session as a frozen baseline (not subject to
+the hallucination envelope, since it is a sourced, previously agreed mechanic):
+`attacker total = attacker Attack + 1d6`; `defender total = defender Defence + 1d6`. If
+attacker total > defender total, the defender loses 2 HP. If equal, both lose 1 HP. If
+defender total > attacker total, the attacker loses 1 HP. A piece at 0 HP is removed from
+the board.
+
+1.7.4. Upgrade-Building Role Assignment (Hallucination Envelope Declared)
+Hallucination envelope invocation: context = "X Paradox X upgrade-building piece role";
+declared range = 0.5 (moderate, since no real-chess precedent exists for a "builder" piece
+role at all); rationale = the original ideation session assigned upgrade-building to a
+bespoke "Architect" unit that no longer exists under the standard-chess-piece canon; the
+Bishop is selected as its replacement because it is the least combat-dominant non-Pawn piece,
+thematically suited to a support role. Only the Bishop may purchase a territory upgrade
+(Section 1.9.3); this assignment is provisional and may be revisited before implementation
+if it is found to under-value the Bishop in the finished balance testing described in
+012_game_perfomance_tests.txt.
+
+1.8. Turn Structure
+Every turn proceeds through five phases, retained unchanged from the original ideation
+session: 1) Draw one card; 2) Income - gain one credit per owned territory; 3) Move - move
+one piece; 4) Action - attack, capture, build an upgrade, or play a card; 5) End Turn -
+resolve effects and pass control. Move and Action may be skipped; Draw and Income may not.
+
+1.9. Territories
+
+1.9.1. Capture Rules
+A player captures a neutral territory by ending movement on it. A player captures an
+opposing territory by removing its defending piece, or by occupying it while no enemy piece
+remains on the tile. Retained unchanged from the original ideation session.
+
+1.9.2. Income and Dominion Points
+Each controlled territory provides 1 credit during the Income phase. A territory held for
+three consecutive turns provides 1 Dominion Point. Retained unchanged from the original
+ideation session.
+
+1.9.3. Upgrades
+Only a Bishop may purchase one upgrade for its currently controlled territory (see Section
+1.7.4). Each territory may hold only one upgrade.
+| Upgrade | Cost | Effect |
+|---------|------|--------|
+| Fortress | 3 credits | Defending occupant gains +1 Defence |
+| Market | 3 credits | Territory produces +1 credit |
+| Relay | 2 credits | A friendly piece beginning movement here gains +1 movement range |
+Retained unchanged from the original ideation session except for the piece-role restriction
+in 1.7.4.
+
+1.10. Cards
+
+1.10.1. Standard 52-Card Deck Structure
+A single standard 52-card deck (4 suits x 13 ranks, no jokers) is shared by both players as
+the draw/hand deck, superseding the original ideation session's bespoke 24-card deck (see
+Section 1.12).
+
+1.10.2. Suit-to-Class Mapping
+| Suit | Ability Class |
+|------|-----------------|
+| Hearts | Defence |
+| Spades | Attack |
+| Diamonds | Economy |
+| Clubs | Chaos |
+This mapping was explicitly specified by the user in the 2026-07-30 clarification session
+and is treated as sourced, not invented.
+
+1.10.3. Rank-to-Magnitude Mapping (Hallucination Envelope Declared)
+Hallucination envelope invocation: context = "X Paradox X 52-card rank-to-magnitude
+mapping"; declared range = 0.45 (moderate, since a standard deck has no native game-effect
+magnitude and a full mapping must be invented, but bounded to stay proportionate to the
+original ideation session's card-effect scale of roughly 1-3 units of effect); rationale =
+translates a standard deck's 13 ranks into 3 usable magnitude tiers so that every card in
+the shared deck resolves to a concrete, bounded effect within each suit's class.
+| Rank Range | Tier | Effect Magnitude (within the drawn suit's class) |
+|------------|------|-----------------------------------------------------|
+| 2-6 | Low | 1 unit (e.g. 1 damage, 1 credit, 1 HP restored) |
+| 7-10 | Medium | 2 units (e.g. 2 damage, 2 credits, 2 HP restored) |
+| J, Q, K | High | 3 units, or one bounded special effect (e.g. reroll a die, swap two unoccupied non-home tiles) |
+| Ace | Wild | Player's choice of any one tier's effect within the drawn suit's class |
+
+1.11. Victory Conditions
+A player wins immediately upon meeting any one of the following, retained in spirit from the
+original ideation session with the Crown renamed to King to match the standard-chess-piece
+canon:
+1.11.1. Territory majority: control more than half of the board's capturable territories
+(e.g. 7 of 12 at the N=6 default tile composition from Section 1.6.2).
+1.11.2. King capture: the opposing King piece is reduced to 0 HP and removed from the board.
+1.11.3. Dominion Points threshold: a player reaches 20 Dominion Points (default; may be
+scaled proportionally to board size in a future balance revision, flagged here rather than
+silently changed).
+
+1.12. Reconciliation with Prior Ideation
+| Topic | Original (chat_record_30072026.md) | Current Canon (this document) | Justification |
+|-------|--------------------------------------|-------------------------------|----------------|
+| Board size | Fixed 6x6 | Variable 4x4/6x6/8x8/custom, minimum 4x4 | User direction, 2026-07-30 session |
+| Pieces | Crown, Knight, Scout, Architect (bespoke, 4 total) | Standard chess pieces (King, Queen, Rook, Bishop, Knight, Pawn), scaled by board size | User direction, 2026-07-30 session |
+| Piece combat stats | Bespoke stat-block per bespoke unit | Invented stat-block per standard chess piece (Section 1.7.2), hallucination envelope 0.4 declared | Necessitated by the pieces change above |
+| Upgrade builder | "Architect" unit | Bishop (Section 1.7.4), hallucination envelope 0.5 declared | Necessitated by the pieces change above; Architect no longer exists |
+| Card deck | Bespoke 24-card deck (12 unique x2), named cards | Standard 52-card deck, suit=class/rank=magnitude | User direction, 2026-07-30 session |
+| Combat resolution | Attack+d6 vs Defence+d6, win/tie/loss damage table | Unchanged | No user objection; orthogonal to the pieces/cards change |
+| Turn phases | Draw/Income/Move/Action/End Turn | Unchanged | No user objection |
+| Territory capture/income/upgrades | As described | Unchanged except upgrade-builder role (see above) | No user objection to the mechanic itself |
+| Victory conditions | Territory 7/12, Crown destruction, 20 Dominion Points | Territory majority (board-size-relative), King capture, 20 Dominion Points (default) | Renamed Crown->King; territory threshold generalized for variable board size |
+
+1.13. Summary Table
+| Mechanic | Rule |
+|-----------|------|
+| Board | Square, 4x4 minimum, up to 8x8 or custom |
+| Pieces | Standard chess set, scaled by board size, invented HP/Atk/Def |
+| Combat | Attack+d6 vs Defence+d6; win -2HP, tie -1HP each, loss -1HP attacker |
+| Cards | Standard 52-card deck; suit=class, rank=magnitude tier |
+| Turn phases | Draw, Income, Move, Action, End Turn |
+| Territory | Capture by occupation/defeat; 1 credit/turn; 1 Dominion Point per 3 consecutive turns held |
+| Upgrades | Fortress/Market/Relay, Bishop-only, one per territory |
+| Victory | Territory majority / King capture / 20 Dominion Points |
+
+1.14. Reconciliation Table
+See Section 1.12 above; this section cross-references it in full satisfaction of the
+mandatory document skeleton.
+
+1.15. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Invented combat stat-blocks (1.7.2) unbalancing matches | Medium | High | Flagged explicitly as envelope-bounded and provisional pending playtesting in 012_game_perfomance_tests.txt |
+| Bishop-only upgrade rule (1.7.4) feeling arbitrary to players unfamiliar with this document | Low | Medium | Surfaced in the How to Play screen (004_game_menu_context_menus.txt Section 1.7.3) |
+| Real chess movement rules increasing implementation complexity vs. the original simplified tile-range movement | Medium | Medium | Full legality edge cases (e.g. check/checkmate nuance, castling, en passant) are explicitly deferred; see 018_future_wishlist_items.txt |
+| Territory-majority threshold ambiguity at custom board sizes | Medium | Medium | 1.11.1 defines majority as "more than half of capturable territories," computed at runtime for any N |
+
+1.16. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain rules canon | R | C | A | A/Stakeholder (game owner) |
+| Approve hallucination-envelope invocations | R/A | C | A | I |
+| Balance/playtest review of invented stat-blocks | C | R | A | I |
+
+1.17. Conclusion
+X Paradox X's rules are now fully specified and reconciled against their origin story, with
+every invented value explicitly bounded and declared per the hallucination-envelope
+discipline. This document is the single source of truth for all game mechanics.
+
+1.18. References and Citations
+1.18.1. Internal: game_specifications/0000_documentation_standards.txt §1.6.6 (hallucination
+envelope enforcement).
+1.18.2. Internal: chatGPT_records/chat_record_30072026.md Sections 2-5 (original rules,
+board, combat, cards, upgrades), 2026-07-30.
+1.18.3. Internal: game_specifications/001_game_concept.txt (brand and MVP scope).
+1.18.4. External: FIDE Laws of Chess (movement legality reference for standard pieces).
+1.18.5. External: Standard 52-card deck convention (4 suits x 13 ranks, no jokers).
+
+1.19. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: board, pieces, combat, cards, territories, upgrades, victory conditions, with full reconciliation and declared hallucination-envelope invocations. | Major |

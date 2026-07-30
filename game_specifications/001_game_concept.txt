@@ -1,0 +1,192 @@
+1. Game Concept (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Brand Identity
+1.6.1. Company
+1.6.2. Genre
+1.6.3. Title
+1.6.4. Tagline
+1.7. Elevator Pitch
+1.8. Reconciliation with Prior Ideation
+1.9. MVP Scope Boundaries
+1.9.1. In Scope
+1.9.2. Explicitly Out of Scope
+1.10. Summary Table
+1.11. Reconciliation Table
+1.12. Risk and Mitigation Table
+1.13. Roles and Responsibilities (RACI)
+1.14. Conclusion
+1.15. References and Citations
+1.16. Changelog Table
+
+1.1. Abstract
+This document defines the canonical concept, brand identity, and minimum-viable-product
+(MVP) scope for X Paradox X, the first title published under the X Dark X company banner in
+the Dark Strategy (DS) genre. It supersedes, with explicit reconciliation, the earlier
+ideation captured in chatGPT_records/chat_record_30072026.md, which used the working genre
+label "eXtended Strategy Game (XSG)" and working title "X Paradox." This document is the
+single source of truth for what the game is; all other files in game_specifications/ must
+cite this document rather than restate or reinterpret its content.
+
+1.2. Key Words
+X Dark X, Dark Strategy, DS, X Paradox X, brand identity, elevator pitch, MVP, hackathon,
+LabLab AI Factory, Natively AI, chess, playing cards, dice, territory, economy, tabletop.
+
+1.3. Executive Summary
+X Paradox X is a two-player, local pass-and-play digital tabletop strategy game that fuses
+standard chess pieces and movement rules, a standard 52-card playing-card deck reinterpreted
+as an ability system, six-sided dice combat resolution, and Monopoly-style territory
+ownership and economy on a variable-size square board. It is being built for the LabLab AI
+Factory hackathon using Natively AI, with this repository (DarkStrategy_XParadoxX, a
+py.typed Python package) serving as the authoritative backend implementation target. The
+concept intentionally narrows scope to a single vertical slice — one board, two players, a
+complete turn cycle, functioning combat, one card resolved, and one victory condition — in
+preference to broad but shallow feature coverage, per the delivery priority established in
+Section 1.9.
+
+1.4. Key Findings
+1.4.1. The brand hierarchy is three-tiered: Company (X Dark X) > Genre (Dark Strategy, DS)
+> Title (X Paradox X), and every future title under X Dark X is expected to sit inside the
+Dark Strategy genre unless a new genre document is separately ratified.
+1.4.2. The game mechanically synthesizes four previously separate systems — positional
+chess-like tactics, card-driven abilities, dice-based uncertainty, and territorial economy —
+rather than cloning any single existing genre.
+1.4.3. This repository is the real Python backend, not a disposable planning artifact; every
+subsequent engineering document (005-009, 011-015, 019, 023, 024) governs code that will
+actually ship.
+1.4.4. Three mechanical pillars were deliberately changed from the original ChatGPT ideation
+session during this documentation pass: board size became variable (minimum 4x4) rather than
+fixed 6x6; the card system became a standard 52-card deck rather than a bespoke 24-card deck;
+and the playable pieces became standard chess pieces with invented combat stat-blocks rather
+than four bespoke unit types. See Section 1.8 for the full reconciliation.
+1.4.5. The MVP explicitly excludes accounts, online multiplayer, procedurally generated
+boards, and real-money economies, matching the original hackathon-scoping guidance in
+chatGPT_records/chat_record_30072026.md Section 1 ("Core MVP").
+
+1.5. Philosophical Preamble
+A concept document is the deed to a territory not yet built. Before a single line of Python
+is written, before Natively AI generates a single component, the founders must be able to
+answer, without hesitation: what is this, who is it for, and what will we deliberately not
+build first. X Paradox X takes its name and philosophy from the paradox at its center —
+that chess's perfect information, cards' hidden information, and dice's raw chance can
+coexist in one coherent ruleset without collapsing into noise. Naming the game after that
+tension is a statement of intent: rigor and controlled chaos are not opposites here, they are
+collaborators.
+
+1.6. Brand Identity
+
+1.6.1. Company
+X Dark X is the publishing/production umbrella under which X Paradox X and any future titles
+in the Dark Strategy genre are released.
+
+1.6.2. Genre
+Dark Strategy (abbreviated DS) is the house genre. It denotes a strategy game blending
+positional tactics, resource/territory economy, card-driven ability systems, and bounded
+randomness, presented through the X Dark X visual language (see 002_game_aesthetics.txt).
+This name and abbreviation supersede the ChatGPT record's working label "eXtended Strategy
+Game (XSG)"; XSG is retained only as a historical citation, not as an active brand term.
+
+1.6.3. Title
+X Paradox X is the first title in the Dark Strategy genre. This supersedes the ChatGPT
+record's working title "X Paradox" (missing the trailing "X").
+
+1.6.4. Tagline
+"Own the Board. Break the Rules." — carried forward unchanged from the original ideation
+session (chatGPT_records/chat_record_30072026.md).
+
+1.7. Elevator Pitch
+X Paradox X is an AI-assisted digital tabletop strategy game combining chess-piece
+positional tactics, a standard 52-card ability deck, six-sided-dice combat, and
+territory-driven economy on a configurable square board, built as a two-player local
+pass-and-play prototype for the LabLab AI Factory hackathon.
+
+1.8. Reconciliation with Prior Ideation
+The table below records every point where this document's canon diverges from the original
+ChatGPT ideation session, per the mandatory Reconciliation Table and Deviation Discipline
+requirements of game_specifications/0000_documentation_standards.txt Sections 1.6.3.2 and
+1.6.5.3.
+
+| Topic | Original (chat_record_30072026.md) | Current Canon (this document) | Justification |
+|-------|--------------------------------------|-------------------------------|----------------|
+| Company name | Implied "X Dark X" (exploratory) | X Dark X (confirmed) | User confirmation, 2026-07-30 session |
+| Genre name | "eXtended Strategy Game (XSG)" | "Dark Strategy (DS)" | User confirmation, 2026-07-30 session; matches repository folder name DarkStrategy_XParadoxX |
+| Title | "X Paradox" | "X Paradox X" | User confirmation, 2026-07-30 session |
+| Board size | Fixed 6x6 | Variable square, N in {4,6,8,custom}, minimum 4x4 | User explicitly requested variable sizing with a hard 4x4 floor for playability |
+| Piece set | 4 bespoke units (Crown, Knight, Scout, Architect) | Standard chess pieces (King, Queen, Rook, Bishop, Knight, Pawn) with invented HP/Attack/Defence stat-blocks | User explicitly requested standard chess pieces; bespoke units retained as historical reference only |
+| Card deck | Bespoke 24-card deck (12 unique x2) | Standard 52-card deck, suit=ability class, rank=magnitude | User explicitly requested a standard playing-card deck |
+| Combat resolution | attacker(Atk+d6) vs defender(Def+d6), win/tie/loss damage table | Unchanged, retained as-is | No user objection; mechanic is sound and orthogonal to the piece/card changes |
+| Victory conditions | Territory majority (7/12), Crown destruction, 20 Dominion Points | Territory majority (board-size-scaled), King capture, Dominion Points (board-size-scaled) | Retained in spirit; renamed Crown->King to match standard chess pieces |
+| Turn phases | Draw, Income, Move, Action, End Turn | Unchanged, retained as-is | No user objection |
+
+1.9. MVP Scope Boundaries
+
+1.9.1. In Scope
+1.9.1.1. One configurable square board (default 6x6, selectable 4x4/6x6/8x8/custom).
+1.9.1.2. Two local players, pass-and-play, standard chess piece sets scaled to board size.
+1.9.1.3. Standard 52-card shared deck with suit/rank-driven abilities.
+1.9.1.4. Six-sided-dice combat resolution.
+1.9.1.5. Territory capture, income, and Dominion Points economy.
+1.9.1.6. One complete, playable turn cycle and at least one working victory condition.
+
+1.9.2. Explicitly Out of Scope (MVP)
+1.9.2.1. User accounts, authentication, or profiles.
+1.9.2.2. Online/networked multiplayer.
+1.9.2.3. Real-money economy or monetization.
+1.9.2.4. Procedurally generated (non-deterministic-layout) boards.
+1.9.2.5. Fully autonomous AI game-mastering that mutates game state directly (the AI Adviser
+described in 016_game_modes.txt only recommends; it never mutates state).
+1.9.2.6. Items deferred to 018_future_wishlist_items.txt are, by definition, out of MVP scope.
+
+1.10. Summary Table
+| Attribute | Value |
+|-----------|-------|
+| Company | X Dark X |
+| Genre | Dark Strategy (DS) |
+| Title | X Paradox X |
+| Tagline | Own the Board. Break the Rules. |
+| Players | 2 (local pass-and-play) |
+| Board | Square, variable, minimum 4x4 |
+| Pieces | Standard chess pieces + invented stat-blocks |
+| Cards | Standard 52-card deck |
+| Combat | Attack+d6 vs Defence+d6 |
+| Victory paths | Territory / King capture / Dominion Points |
+| Target platform | Natively AI generated frontend + Python backend (this repo) |
+
+1.11. Reconciliation Table
+See Section 1.8 above (the full reconciliation table is placed in-body per its scale and
+direct relevance to Key Finding 1.4.4; this section is retained per the mandatory document
+skeleton and cross-references 1.8 in full satisfaction of that requirement).
+
+1.12. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Scope creep beyond the MVP boundary (Section 1.9) | High | High | Every feature request checked against 1.9.1/1.9.2 before implementation; deferred items routed to 018 |
+| Confusion between old ("X Paradox"/XSG) and new ("X Paradox X"/Dark Strategy) naming in future chats or generated assets | Medium | Medium | This document's Section 1.8 is the canonical disambiguation reference; all agents must cite it |
+| Standard-chess-piece movement rules increasing implementation complexity versus the original simplified tile-range movement | Medium | Medium | 017_game_rules.txt defines exact movement per piece and defers full legality edge-cases (e.g. check/checkmate nuance) to a documented simplification |
+
+1.13. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain brand identity (1.6) | R | C | A | I |
+| Approve MVP scope changes (1.9) | C | R | A | A/Stakeholder (game owner) |
+| Reconcile future ideation sessions against this canon | R | C | A | I |
+
+1.14. Conclusion
+X Paradox X is defined, scoped, and reconciled against its own origin story. Every subsequent
+specification document must treat Sections 1.6 through 1.9 of this file as binding and must
+not silently reinterpret brand names, mechanics, or MVP boundaries.
+
+1.15. References and Citations
+1.15.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.15.2. Internal: chatGPT_records/chat_record_30072026.md (original ideation session,
+2026-07-30), cited throughout Section 1.8.
+1.15.3. Internal: game_specifications/017_game_rules.txt (authoritative mechanics detail).
+1.15.4. Internal: game_specifications/002_game_aesthetics.txt (authoritative visual identity).
+
+1.16. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: brand identity, elevator pitch, MVP scope, and full reconciliation against chat_record_30072026.md. | Major |

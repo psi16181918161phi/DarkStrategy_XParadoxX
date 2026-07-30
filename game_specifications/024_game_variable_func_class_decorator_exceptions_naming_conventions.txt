@@ -1,0 +1,167 @@
+1. Game Variable, Function, Class, Decorator, and Exception Naming Conventions (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Variable Naming
+1.7. Function and Method Naming
+1.8. Class Naming
+1.9. Decorator Naming
+1.10. Custom Exception Naming
+1.11. Constant Naming
+1.12. Test Naming (Cross-Reference)
+1.13. Summary Table
+1.14. Reconciliation Table
+1.15. Risk and Mitigation Table
+1.16. Roles and Responsibilities (RACI)
+1.17. Conclusion
+1.18. References and Citations
+1.19. Changelog Table
+
+1.1. Abstract
+This document is the authoritative naming-convention specification for X Paradox X, covering
+variables, functions/methods, classes, decorators, custom exceptions, and constants, as
+explicitly required to be included by the user, extending the PEP 8 baseline already
+established in 005_game_coding_standards.txt Section 1.9.
+
+1.2. Key Words
+naming convention, snake_case, PascalCase, UPPER_SNAKE_CASE, decorator, custom exception,
+PEP 8, identifier clarity.
+
+1.3. Executive Summary
+X Paradox X follows standard PEP 8 Python naming conventions throughout, with project-
+specific clarifications: exceptions are suffixed `Error`, decorators are named as verbs or
+verb phrases describing their effect, constants are declared in `UPPER_SNAKE_CASE` in
+dedicated constants modules (never as inline magic values, per 005_game_coding_standards.txt
+Section 1.9), and every identifier name must describe what it represents or does without
+requiring the reader to consult external context.
+
+1.4. Key Findings
+1.4.1. Variables and function/method names use `snake_case`, per PEP 8, and must be
+descriptive nouns (variables) or verb phrases (functions/methods), never single-letter names
+outside of tight, obviously-scoped loops.
+1.4.2. Classes use `PascalCase`; value-object classes representing game concepts are named
+after the concept itself (e.g. `Piece`, `Territory`, `Card`), not prefixed/suffixed with
+implementation detail words like "Manager" or "Data" unless that word adds real meaning.
+1.4.3. Custom exceptions are `PascalCase`, suffixed with `Error` (e.g.
+`IllegalMoveError`, `InsufficientCreditsError`), and each maps to exactly one rule violation
+category defined in 017_game_rules.txt, never a generic catch-all exception.
+1.4.4. Decorators are named as a verb or verb phrase describing the behavior they add (e.g.
+`@validate_command`, `@log_event`), in `snake_case`, consistent with function-naming rules
+since a decorator is itself a function.
+1.4.5. Constants are `UPPER_SNAKE_CASE` and live in dedicated constants modules rather than
+inline in engine logic, per 005_game_coding_standards.txt Section 1.9's "no magic numbers, no
+hardcoded strings" rule.
+
+1.5. Philosophical Preamble
+A name is the first and cheapest piece of documentation a reader ever encounters. This
+document exists because the user explicitly required it to be included, and because
+consistent naming is what makes the rest of this corpus's documentation-heavy discipline
+(WHAT/WHY/HOW docstrings, per 005_game_coding_standards.txt Section 1.8) actually readable in
+practice rather than merely present.
+
+1.6. Variable Naming
+1.6.1. `snake_case`, descriptive nouns: `attacker_piece`, `defender_health`,
+`territory_income`, not `a`, `dh`, `ti`.
+1.6.2. Boolean variables are named as a predicate: `is_legal_move`, `has_upgrade`,
+`can_purchase`.
+1.6.3. Loop counters may use short names (`i`, `row`, `col`) only within a tightly scoped,
+obviously bounded loop; anything crossing a function boundary must use a descriptive name.
+
+1.7. Function and Method Naming
+1.7.1. `snake_case`, verb or verb-phrase: `resolve_combat()`, `capture_territory()`,
+`draw_card()`, `evaluate_victory_conditions()`.
+1.7.2. Functions returning a boolean are named as a predicate: `is_move_legal()`,
+`has_reached_victory()`.
+1.7.3. Private/internal helper functions not part of a module's public surface are prefixed
+with a single leading underscore: `_apply_damage()`.
+
+1.8. Class Naming
+1.8.1. `PascalCase`, named after the concept represented: `Piece`, `Territory`, `Card`,
+`GameState`, `TurnEngine`, `CombatEngine`, consistent with the module names in
+006_game_scaffolding.txt Section 1.6.
+1.8.2. Service/engine classes are suffixed with their role where that adds clarity (`Engine`,
+`Service`, `Adviser`): `MovementEngine`, `RngService`, `AiAdviser`.
+
+1.9. Decorator Naming
+1.9.1. `snake_case`, verb phrase describing the added behavior: `@validate_command`,
+`@log_event`, `@require_active_match`.
+1.9.2. A decorator must not be named after its implementation mechanism (e.g. `@wrapper`,
+`@decorator1`); it must be named after the behavior it adds to the decorated function.
+
+1.10. Custom Exception Naming
+1.10.1. `PascalCase`, suffixed `Error`: `IllegalMoveError`, `InsufficientCreditsError`,
+`InvalidCardTargetError`, `UpgradeAlreadyPresentError`, `PostVictoryActionError`.
+1.10.2. Each custom exception maps to exactly one rule-violation category from
+017_game_rules.txt (e.g. `PostVictoryActionError` maps to the post-victory state lock in
+Section 1.11 and 009_game_unit_tests.txt Section 1.6.10); a new rule-violation category
+requires a new, specifically named exception rather than reuse of a generic one.
+1.10.3. Exceptions never use bare `Exception` or `ValueError`/`TypeError` directly in game-
+rule-violation contexts; only in genuinely generic, non-domain-specific error contexts (e.g.
+malformed configuration file), per 005_game_coding_standards.txt Section 1.9.
+
+1.11. Constant Naming
+1.11.1. `UPPER_SNAKE_CASE`: `DEFAULT_BOARD_SIZE`, `MINIMUM_BOARD_SIZE`,
+`DOMINION_POINTS_VICTORY_THRESHOLD`, `STANDARD_DECK_SIZE`.
+1.11.2. Constants live in dedicated modules (e.g. `src/data/constants.py` or co-located with
+the module they configure), never inline as magic numbers or hardcoded strings, per
+005_game_coding_standards.txt Section 1.9.
+
+1.12. Test Naming (Cross-Reference)
+Test module and function naming conventions are defined in 009_game_unit_tests.txt Section
+1.8 and are not restated here to avoid duplication; this document is the source of truth for
+production-code naming, that document for test-code naming.
+
+1.13. Summary Table
+| Identifier Kind | Case Style | Example |
+|--------------------|--------------|-----------|
+| Variable | snake_case | `attacker_piece` |
+| Boolean variable/function | snake_case predicate | `is_legal_move` |
+| Function/method | snake_case verb phrase | `resolve_combat()` |
+| Private helper | leading underscore snake_case | `_apply_damage()` |
+| Class | PascalCase | `CombatEngine` |
+| Decorator | snake_case verb phrase | `@validate_command` |
+| Custom exception | PascalCase + `Error` suffix | `IllegalMoveError` |
+| Constant | UPPER_SNAKE_CASE | `DEFAULT_BOARD_SIZE` |
+
+1.14. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| User explicit instruction (2026-07-30 session) | "don't forget, i also added in this 024 file! it must be included as well!" | This document created in full, covering variables, functions, classes, decorators, and exceptions as titled | Fulfilled |
+| 005_game_coding_standards.txt Section 1.9 | General PEP 8 requirement | Elaborated here into concrete, per-identifier-kind rules | Reconciled |
+
+1.15. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Generic exceptions (`ValueError`) used for domain rule violations, obscuring intent | Medium | Medium | 1.10.3 explicitly restricts bare built-in exceptions to non-domain-specific contexts |
+| Decorator names describing mechanism instead of behavior, reducing readability | Low | Low | 1.9.2 explicitly prohibits mechanism-based decorator names |
+| Naming drift between this document and actual module names in 006_game_scaffolding.txt | Low | Medium | 1.8.1 explicitly cross-references the module list as the naming source for engine classes |
+
+1.16. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain naming conventions | R | C | A | I |
+| Enforce via code review/lint | C | R | A | I |
+
+1.17. Conclusion
+X Paradox X's naming conventions extend PEP 8 with project-specific, rule-traceable
+conventions for exceptions and decorators, fulfilling the user's explicit requirement that
+this file be included in the corpus.
+
+1.18. References and Citations
+1.18.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.18.2. Internal: game_specifications/005_game_coding_standards.txt §1.9 (PEP 8 baseline,
+no magic numbers/hardcoded strings).
+1.18.3. Internal: game_specifications/006_game_scaffolding.txt (module/class name
+alignment).
+1.18.4. Internal: game_specifications/017_game_rules.txt (rule-violation categories mapped to
+custom exceptions).
+1.18.5. Internal: game_specifications/009_game_unit_tests.txt §1.8 (test naming
+cross-reference).
+1.18.6. External: PEP 8 - Style Guide for Python Code.
+
+1.19. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation, per explicit user instruction not to omit this file: naming conventions for variables, functions, classes, decorators, and custom exceptions. | Major |

@@ -1,4 +1,134 @@
-100% coverage, 100% pass rate as baseline standard. 
-Modularization is encouraged. 
-Clean code, SOLID, ACID, JPL 10 principles must be adhered to. 
-Unit test, pytest, behave and other testing frameworks must be used to ensure code quality.
+1. Game Testing (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Original Baseline Directive (Preserved Verbatim)
+1.7. Testing Pyramid Overview
+1.8. Coverage and Pass-Rate Baseline
+1.9. Tooling
+1.10. Summary Table
+1.11. Reconciliation Table
+1.12. Risk and Mitigation Table
+1.13. Roles and Responsibilities (RACI)
+1.14. Conclusion
+1.15. References and Citations
+1.16. Changelog Table
+
+1.1. Abstract
+This document establishes the overall testing philosophy and baseline quality bar for
+X Paradox X, expanding the pre-existing baseline directive (preserved verbatim in Section
+1.6) into the full structure mandated by 0000_documentation_standards.txt, and acting as the
+umbrella document for 009_game_unit_tests.txt, 011_game_integration_tests.txt,
+012_game_perfomance_tests.txt, and 013_game_end2end_testing.txt.
+
+1.2. Key Words
+100% coverage, pass rate, pytest, behave, testing pyramid, modularization, SOLID, ACID,
+JPL Power of Ten, quality baseline.
+
+1.3. Executive Summary
+X Paradox X treats 100% test coverage and 100% pass rate as the non-negotiable baseline
+standard for every merge. Testing spans four tiers — unit, integration, performance, and
+end-to-end — each documented separately, with `pytest` as the primary framework and
+`behave` available for behavior-driven scenarios. Modularization, Clean Code, SOLID, ACID,
+and JPL Power-of-Ten discipline (per 005_game_coding_standards.txt) are treated as
+prerequisites for testability, not independent concerns.
+
+1.4. Key Findings
+1.4.1. The original baseline directive (Section 1.6) already established the 100%
+coverage/100% pass-rate standard; this revision formalizes it and links it to the four
+test-tier documents that implement it.
+1.4.2. Deterministic, seeded randomness (003_game_philosophy.txt Section 1.6.2) is what
+makes 100% coverage achievable for combat and card-resolution code paths; without a seeded
+RNG service, dice/card outcomes could not be asserted deterministically.
+1.4.3. `pytest` is the primary test runner; `behave` is available for any
+behavior-driven/Gherkin-style scenario coverage the team chooses to add.
+1.4.4. The testing pyramid is: Unit (009) at the base, Integration (011) above it,
+Performance (012) and End-to-End (013) at the top, mirroring the dependency direction
+established in 006_game_scaffolding.txt.
+1.4.5. No code is considered complete without an accompanying test, per
+005_game_coding_standards.txt Section 1.9 ("Write unit tests for all functions and
+classes").
+
+1.5. Philosophical Preamble
+A 100% coverage baseline is not a vanity metric; in a rules engine whose entire value
+proposition is deterministic fairness (003_game_philosophy.txt), an untested code path is an
+unverified rule, and an unverified rule is a broken promise to the player. Testing is the
+mechanism by which "the rules engine is the sole authority over state" becomes a checkable
+claim rather than an aspiration.
+
+1.6. Original Baseline Directive (Preserved Verbatim)
+"100% coverage, 100% pass rate as baseline standard.
+Modularization is encouraged.
+Clean code, SOLID, ACID, JPL 10 principles must be adhered to.
+Unit test, pytest, behave and other testing frameworks must be used to ensure code quality."
+
+1.7. Testing Pyramid Overview
+| Tier | Document | Scope |
+|------|----------|-------|
+| Unit | 009_game_unit_tests.txt | Individual functions/classes/engines in isolation |
+| Integration | 011_game_integration_tests.txt | Interaction between engines (e.g. combat + territory + event log) |
+| Performance | 012_game_perfomance_tests.txt | Load/latency budgets for board evaluation and AI adviser response |
+| End-to-End | 013_game_end2end_testing.txt | Full match playthroughs via the API/command layer |
+
+1.8. Coverage and Pass-Rate Baseline
+1.8.1. 100% line and branch coverage is the baseline standard for all `src/game` and
+`src/data` code; `src/services` and `src/api` code follows the same standard unless a
+documented, reviewed exception is recorded per 0000_documentation_standards.txt Section
+1.6.5.3.
+1.8.2. 100% pass rate is required on the `main`/release branch at all times; a failing test
+blocks merge, per 014_game_cicd.txt.
+
+1.9. Tooling
+1.9.1. `pytest` is the primary framework for unit, integration, and end-to-end tests.
+1.9.2. `behave` is available for Gherkin-style behavior scenarios where the team judges
+them clearer than plain `pytest` cases.
+1.9.3. Coverage is measured with `coverage.py` (or an equivalent `pytest`-integrated
+coverage plugin) and reported in CI per 014_game_cicd.txt.
+
+1.10. Summary Table
+| Standard | Value |
+|-----------|-------|
+| Coverage baseline | 100% |
+| Pass-rate baseline | 100% |
+| Primary framework | pytest |
+| Secondary framework | behave |
+| Prerequisite discipline | Clean Code, SOLID, ACID, JPL Power of Ten |
+
+1.11. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| Pre-existing baseline (this file, prior revision) | Four short bullet-style statements | Preserved verbatim in Section 1.6; expanded into Sections 1.7-1.9 and linked to tier-specific documents | Reconciled |
+
+1.12. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| 100% coverage becoming a checkbox exercise (tests that execute code without asserting behavior) | Medium | High | Code review checklist requires meaningful assertions, not just coverage-line execution |
+| Non-deterministic test failures from unseeded randomness | Medium | High | Seeded RNG service mandated by 003_game_philosophy.txt Section 1.6.2 and 019_game_data_structures_algorithms.txt |
+| Coverage baseline slipping under hackathon time pressure | High | High | CI gate blocks merge below 100% (see 014_game_cicd.txt) unless an explicit, logged exception exists |
+
+1.13. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain testing philosophy and baseline | R | C | A | I |
+| Enforce coverage/pass-rate gate in CI | R | C | A | I |
+
+1.14. Conclusion
+The 100% coverage/100% pass-rate baseline from the original directive is retained as
+non-negotiable and is now explicitly connected to the four test-tier documents that
+implement it in practice.
+
+1.15. References and Citations
+1.15.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.15.2. Internal: game_specifications/005_game_coding_standards.txt (structural
+prerequisites for testability).
+1.15.3. Internal: game_specifications/009_game_unit_tests.txt,
+011_game_integration_tests.txt, 012_game_perfomance_tests.txt,
+013_game_end2end_testing.txt.
+1.15.4. External: pytest documentation; behave documentation.
+
+1.16. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Restructured pre-existing baseline directive into full 0000-compliant document; original text preserved verbatim in Section 1.6. | Major |

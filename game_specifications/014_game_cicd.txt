@@ -1,0 +1,149 @@
+1. Game CI/CD (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Pipeline Stages
+1.6.1. Lint and Style
+1.6.2. Type Checking
+1.6.3. Unit Test and Coverage Gate
+1.6.4. Integration Test Gate
+1.6.5. Import-Direction/Architecture Gate
+1.6.6. End-to-End Test Gate
+1.6.7. Scheduled Performance/Balance Simulation
+1.7. Branching and Release Strategy
+1.8. Summary Table
+1.9. Reconciliation Table
+1.10. Risk and Mitigation Table
+1.11. Roles and Responsibilities (RACI)
+1.12. Conclusion
+1.13. References and Citations
+1.14. Changelog Table
+
+1.1. Abstract
+This document specifies the continuous integration and continuous deployment pipeline for
+X Paradox X, implementing the version-control and CI/CD discipline established in
+005_game_coding_standards.txt Section 1.10 as a concrete, staged pipeline with explicit
+quality gates.
+
+1.2. Key Words
+CI/CD, pipeline, quality gate, coverage gate, lint, type check, branching strategy, scheduled
+job.
+
+1.3. Executive Summary
+Every change to X Paradox X passes through an ordered pipeline: lint/style, type checking,
+unit tests with a 100% coverage gate, integration tests, an import-direction/architecture
+gate, and end-to-end tests, with the large-sample balance simulation
+(012_game_perfomance_tests.txt Section 1.6.5) run on a scheduled/slower cadence rather than
+on every commit.
+
+1.4. Key Findings
+1.4.1. The unit-test coverage gate enforces the 100% coverage/100% pass-rate baseline from
+008_game_testing.txt Section 1.8 as a hard pipeline failure condition, not merely a report.
+1.4.2. The import-direction/architecture gate mechanically enforces the one-way import
+direction (`data -> game -> services/api`) declared in 006_game_scaffolding.txt Section 1.6,
+failing the build if a reverse import is introduced.
+1.4.3. End-to-end tests (013_game_end2end_testing.txt) run in the pipeline but are permitted
+a longer timeout budget than unit/integration tests, consistent with their heavier UI
+automation tooling.
+1.4.4. The large-sample balance simulation (012_game_perfomance_tests.txt Section 1.6.5) is
+explicitly scheduled rather than run per-commit, since its minimum 10-minute wall-clock
+budget would otherwise slow every change.
+1.4.5. Every pipeline stage failure blocks merge; no stage is advisory-only, consistent with
+the "code reviews to maintain code quality" and CI/CD discipline in 005_game_coding_standards.txt
+Section 1.10.
+
+1.5. Philosophical Preamble
+A pipeline is where the corpus's other promises (100% coverage, one-way imports, deterministic
+rules authority) stop being aspirations and start being mechanically enforced facts about
+every single change. This document exists so that no quality standard declared elsewhere in
+this corpus is left to depend on a human remembering to check it manually.
+
+1.6. Pipeline Stages
+
+1.6.1. Lint and Style
+PEP 8 compliance and project style rules (005_game_coding_standards.txt Section 1.9) checked
+via an automated linter; failure blocks merge.
+
+1.6.2. Type Checking
+Static type checking against the type hints mandated in 005_game_coding_standards.txt Section
+1.9; failure blocks merge.
+
+1.6.3. Unit Test and Coverage Gate
+All unit tests (009_game_unit_tests.txt) must pass with 100% coverage, per
+008_game_testing.txt Section 1.8; failure blocks merge.
+
+1.6.4. Integration Test Gate
+All integration tests (011_game_integration_tests.txt) must pass; failure blocks merge.
+
+1.6.5. Import-Direction/Architecture Gate
+An automated import-graph check confirms no module in `src/data` imports from `src/game`,
+`src/services`, or `src/api`, and no module in `src/game` imports from `src/services` or
+`src/api`, per 006_game_scaffolding.txt Section 1.6; failure blocks merge.
+
+1.6.6. End-to-End Test Gate
+All end-to-end tests (013_game_end2end_testing.txt) must pass, with a longer timeout budget
+than earlier stages to accommodate UI automation; failure blocks merge.
+
+1.6.7. Scheduled Performance/Balance Simulation
+The large-sample balance simulation (012_game_perfomance_tests.txt Section 1.6.5) runs on a
+scheduled cadence (e.g. nightly or on release-branch merges) rather than per-commit; a
+regression here is reviewed by the game owner rather than automatically blocking every merge,
+since it reflects a design-balance signal rather than a correctness defect.
+
+1.7. Branching and Release Strategy
+1.7.1. Feature branches for new work, bug-fix branches for defects, release branches for
+hackathon-submission cut points, per 005_game_coding_standards.txt Section 1.10.
+1.7.2. Merges to the main branch require all pipeline stages in Sections 1.6.1-1.6.6 to pass
+and at least one code review approval.
+1.7.3. Commit messages are clear and concise per 005_game_coding_standards.txt Section 1.10,
+describing what changed and why.
+
+1.8. Summary Table
+| Stage | Gate Type | Blocks Merge |
+|-------|-----------|----------------|
+| Lint/style | Per-commit | Yes |
+| Type check | Per-commit | Yes |
+| Unit tests + 100% coverage | Per-commit | Yes |
+| Integration tests | Per-commit | Yes |
+| Import-direction/architecture | Per-commit | Yes |
+| End-to-end tests | Per-commit (extended timeout) | Yes |
+| Balance simulation | Scheduled | No (reviewed, not auto-blocking) |
+
+1.9. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| 005_game_coding_standards.txt Section 1.10 | General CI/CD and branching discipline directive | Instantiated as a concrete seven-stage pipeline with explicit gate/blocking semantics | Reconciled |
+
+1.10. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Pipeline duration growing unacceptably as test tiers accumulate | Medium | Medium | Balance simulation moved to a scheduled stage (1.6.7) specifically to bound per-commit duration |
+| Import-direction gate producing false positives on legitimate refactors | Low | Low | Gate checks only the direction declared in 006_game_scaffolding.txt, not an arbitrary stricter rule |
+| A failing scheduled balance-simulation stage being ignored since it does not block merge | Medium | Medium | 1.6.7 assigns explicit game-owner review responsibility rather than leaving it unowned |
+
+1.11. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain pipeline configuration | R | C | A | I |
+| Review scheduled balance-simulation regressions | C | R | A | A/Stakeholder (game owner) |
+
+1.12. Conclusion
+A seven-stage pipeline mechanically enforces every quality standard declared elsewhere in
+this corpus, with the one deliberately non-blocking exception of the scheduled balance
+simulation, whose regressions require design judgment rather than automatic rejection.
+
+1.13. References and Citations
+1.13.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.13.2. Internal: game_specifications/005_game_coding_standards.txt §1.10 (CI/CD and
+version-control discipline).
+1.13.3. Internal: game_specifications/008_game_testing.txt (coverage/pass-rate baseline).
+1.13.4. Internal: game_specifications/006_game_scaffolding.txt (import-direction rule).
+1.13.5. Internal: game_specifications/012_game_perfomance_tests.txt §1.6.5 (balance
+simulation).
+
+1.14. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: seven-stage CI/CD pipeline, branching strategy, and gate/blocking semantics. | Major |

@@ -1,0 +1,189 @@
+1. Game Aesthetics (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Visual Identity
+1.6.1. Palette Variant A (Dark)
+1.6.2. Palette Variant B (Light/Inverted)
+1.6.3. Shared Accent and Border Rule
+1.6.4. Contrast, Legibility, and Word-Wrap Requirements
+1.7. Typography
+1.8. Tile, Piece, and Card Visual Language
+1.9. Motion and Animation Restraint
+1.10. Logo Concept
+1.11. Reconciliation with Prior Ideation
+1.12. Summary Table
+1.13. Reconciliation Table
+1.14. Risk and Mitigation Table
+1.15. Roles and Responsibilities (RACI)
+1.16. Conclusion
+1.17. References and Citations
+1.18. Changelog Table
+
+1.1. Abstract
+This document defines the authoritative visual identity of X Paradox X: its two selectable
+palette variants, typography, contrast/legibility requirements, and the shared visual
+language applied across board tiles, chess pieces, playing cards, and UI chrome. It
+supersedes the single dark-only palette described in the original ChatGPT ideation session
+(chatGPT_records/chat_record_30072026.md) with a two-variant, user-selectable system.
+
+1.2. Key Words
+palette, dark theme, light theme, contrast, legibility, word wrap, accessibility, typography,
+rose gold, tile visual language, chess piece rendering, playing card rendering, X Dark X.
+
+1.3. Executive Summary
+X Paradox X ships two selectable color-palette variants rather than a single fixed dark
+theme. Variant A (Dark) uses a near-black background with warm-pink text; Variant B
+(Light/Inverted) swaps this to a pink background with near-black text. Both variants share
+a single rose-gold accent and border color, preserving brand continuity across the theme
+toggle. All UI surfaces, board tiles, chess pieces, and playing cards must render legibly in
+both variants, with explicit word-wrapping and contrast requirements, and must never rely on
+color alone to communicate game state.
+
+1.4. Key Findings
+1.4.1. The palette is user-specified and explicitly named in the 2026-07-30 clarification
+session: background/text pair #000000 and #FFACE9, with #B76E79 shared as the accent/border
+color across both variants.
+1.4.2. #FFACE9 is a deliberate, explicit revision of the ChatGPT record's original primary
+pink value #FFAEC9; the two are visually similar but distinct, and #FFACE9 is the canonical
+value going forward. See Section 1.11.
+1.4.3. Variant A (Dark) is background #000000 / text #FFACE9; Variant B (Light) inverts this
+to background #FFACE9 / text #000000. Both variants use #B76E79 for accents, borders, and
+rose-gold ornamentation.
+1.4.4. Legibility, readability, and text/word-wrapping are explicit, non-negotiable
+requirements per user direction, not merely stylistic preferences.
+1.4.5. Units (chess pieces), structures (territory upgrades), and other renderable game
+elements must share one consistent visual language across both palette variants — the same
+iconography and silhouette logic, only recolored per the active variant.
+
+1.5. Philosophical Preamble
+A palette is not decoration; it is a contract of legibility between the game and the player.
+X Paradox X inherits the X Dark X aesthetic of "a luxurious occult strategy table... a
+futuristic command software... a dark casino without visual clutter" (chat_record_30072026.md),
+but a single fixed dark theme excludes players who need or prefer higher ambient-light
+readability. Offering two variants — dark and inverted-light — while keeping the rose-gold
+accent constant preserves brand identity as a constant across contexts, exactly as a
+territory's ownership border should remain recognizable regardless of who currently holds it.
+
+1.6. Visual Identity
+
+1.6.1. Palette Variant A (Dark)
+| Role | Hex |
+|------|-----|
+| Background | #000000 |
+| Primary text | #FFACE9 |
+| Accent / border | #B76E79 |
+
+1.6.2. Palette Variant B (Light/Inverted)
+| Role | Hex |
+|------|-----|
+| Background | #FFACE9 |
+| Primary text | #000000 |
+| Accent / border | #B76E79 |
+
+1.6.3. Shared Accent and Border Rule
+1.6.3.1. #B76E79 (rose-gold) is used identically in both variants for: piece/tile borders,
+selection outlines, dividers, card frames, and the game logo mark.
+1.6.3.2. The active variant is a per-session, user-selectable Settings toggle (see
+004_game_menu_context_menus.txt); it is not tied to player identity or match state.
+1.6.3.3. Danger and success signal colors are not redefined by this document; a future
+revision must declare them explicitly if introduced, following the same table format.
+
+1.6.4. Contrast, Legibility, and Word-Wrap Requirements
+1.6.4.1. #000000 on #FFACE9 and #FFACE9 on #000000 both satisfy strong contrast for body
+text at typical UI sizes; no additional darkening/lightening overlay is required for base
+text, but small numeric badges (health, credits) must use a minimum 14px-equivalent size.
+1.6.4.2. All text containers (card descriptions, event log lines, tooltips, adviser
+explanations) must wrap at word boundaries; text must never be clipped, truncated without an
+affordance, or allowed to overflow its container.
+1.6.4.3. Tile and piece state must never be communicated by color alone (per
+game_specifications/0000_documentation_standards.txt-aligned accessibility practice and the
+original ideation session's own accessibility guidance); borders, icons, and patterns must
+duplicate every color-coded signal.
+
+1.7. Typography
+1.7.1. One geometric display face for headings (uppercase, generous letter-spacing); one
+highly readable sans-serif for interface text (sentence case for instructions).
+1.7.2. Monospaced text is reserved for the event/turn log and board coordinates, to aid
+scanability and debugging.
+1.7.3. Numeric displays (credits, health, Dominion Points) use a compact, tabular-figure
+treatment so values do not visually reflow as digits change.
+
+1.8. Tile, Piece, and Card Visual Language
+1.8.1. Tiles communicate state (neutral, Player One, Player Two, selected, valid destination,
+attackable, blocked, upgraded, temporarily affected) via a combination of fill color (per the
+active palette variant), a distinct border treatment, and a small state icon.
+1.8.2. Chess pieces are rendered as sharp, geometric silhouettes (not photorealistic), using
+the shared visual language described above; each piece's rank (King, Queen, Rook, Bishop,
+Knight, Pawn) must remain instantly distinguishable by silhouette alone, independent of the
+active palette variant.
+1.8.3. Playing cards use their real suit and rank iconography (Hearts/Spades/Diamonds/Clubs,
+2 through Ace) as the primary identifier, with a secondary small icon indicating the mapped
+ability class (Defence/Attack/Economy/Chaos, per 017_game_rules.txt) so suit-to-class mapping
+is learnable at a glance.
+1.8.4. Territory upgrades (Fortress, Market, Relay) each receive one small, consistent glyph
+overlaid on the owning tile.
+
+1.9. Motion and Animation Restraint
+1.9.1. Animation is restrained: selection glows, tile pulses, and dice rolls are permitted;
+continuous or large-scale motion, screen shake, and full-surface gradients are avoided,
+carried forward unchanged from the original ideation session's stated aesthetic exclusions.
+
+1.10. Logo Concept
+1.10.1. Wordmark "X PARADOX X" flanking an abstract fractured-die / impossible-geometry
+board mark combining four crossing movement paths, a six-sided die, a card silhouette, and
+an X-shaped territorial grid, rendered in the accent color #B76E79, carried forward from the
+original ideation session and re-confirmed under the updated title.
+
+1.11. Reconciliation with Prior Ideation
+| Topic | Original (chat_record_30072026.md) | Current Canon (this document) | Justification |
+|-------|--------------------------------------|-------------------------------|----------------|
+| Palette structure | Single fixed dark palette (bg #08070A, surface #121016/#1C1820, primary pink #FFAEC9, accent #B76E79, text #FFF7FA/#CDBFC6, danger #FF5E78, success #8FE3B0) | Two selectable variants (Dark: #000000/#FFACE9; Light: #FFACE9/#000000), shared accent #B76E79 | User explicitly requested two variants and specific new hex values in the 2026-07-30 session |
+| Primary pink value | #FFAEC9 | #FFACE9 | User-specified explicit value; treated as an intentional, not accidental, change |
+| Danger/success colors | #FF5E78 / #8FE3B0 | Not yet redefined | Out of scope for this revision; flagged for a future addendum if needed |
+
+1.12. Summary Table
+| Element | Variant A (Dark) | Variant B (Light) |
+|---------|-------------------|---------------------|
+| Background | #000000 | #FFACE9 |
+| Text | #FFACE9 | #000000 |
+| Accent/Border | #B76E79 | #B76E79 |
+
+1.13. Reconciliation Table
+See Section 1.11 above; this section cross-references it in full satisfaction of the
+mandatory document skeleton.
+
+1.14. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Low contrast on small UI elements in either variant | Low | Medium | Minimum size rule (1.6.4.1) and mandatory border/icon duplication of state (1.6.4.3) |
+| Palette drift if a future contributor reintroduces the old #FFAEC9 value | Medium | Low | This document's Section 1.11 is the canonical disambiguation reference |
+| Piece silhouettes becoming ambiguous at small board sizes (4x4) | Medium | Medium | 1.8.2 mandates silhouette-first distinguishability independent of scale |
+
+1.15. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain palette values | R | C | A | I |
+| Approve new UI states/icons | R | C | A | I |
+| Accessibility/contrast sign-off | C | R/A | A | I |
+
+1.16. Conclusion
+X Paradox X's visual identity is now a two-variant, brand-consistent system anchored by a
+single shared accent color, with explicit legibility and word-wrap guarantees. All UI,
+board, piece, and card rendering work must conform to Sections 1.6 through 1.9 of this
+document.
+
+1.17. References and Citations
+1.17.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.17.2. Internal: chatGPT_records/chat_record_30072026.md (original palette and aesthetic
+guidance, 2026-07-30).
+1.17.3. Internal: game_specifications/001_game_concept.txt §1.6 (brand identity).
+1.17.4. Internal: game_specifications/017_game_rules.txt (piece/card mechanics referenced by
+visual language rules in 1.8).
+
+1.18. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: two-variant palette, typography, tile/piece/card visual language, reconciliation against chat_record_30072026.md. | Major |

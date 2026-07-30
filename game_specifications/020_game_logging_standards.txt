@@ -1,1 +1,135 @@
-.LOG formatting 
+1. Game Logging Standards (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Original Baseline Directive (Preserved Verbatim)
+1.7. Log File Format and Location
+1.8. Log Levels and Usage
+1.9. Structured Log Entry Contract
+1.10. Debug-Action Log Marking
+1.11. Summary Table
+1.12. Reconciliation Table
+1.13. Risk and Mitigation Table
+1.14. Roles and Responsibilities (RACI)
+1.15. Conclusion
+1.16. References and Citations
+1.17. Changelog Table
+
+1.1. Abstract
+This document specifies the logging standards for X Paradox X, elaborating the original
+".LOG formatting" baseline directive into a concrete, structured logging contract used by
+the Python `logging` module (005_game_coding_standards.txt Section 1.9) and consumed as the
+source of truth for player statistics (010_game_player_statistics.txt).
+
+1.2. Key Words
+logging, .LOG format, log level, structured log entry, event log, debug action, statistics
+source.
+
+1.3. Executive Summary
+X Paradox X writes structured, human-readable `.LOG` files via the Python `logging` module
+exclusively (never `print()`), at standard severity levels, with every gameplay-relevant
+event also captured as a structured entry in the in-match event log
+(019_game_data_structures_algorithms.txt Section 1.6.5) that doubles as the source of truth
+for statistics derivation.
+
+1.4. Key Findings
+1.4.1. `.LOG` files are the required output format for all logging, per the preserved
+baseline directive in Section 1.6.
+1.4.2. Development builds log at `DEBUG` level and above; production builds log at `INFO`
+level and above, per 015_game_deployment.txt Section 1.6.
+1.4.3. Every command that mutates game state (move, attack, card play, upgrade purchase, end
+turn) produces exactly one structured event-log entry, consumed by
+010_game_player_statistics.txt.
+1.4.4. Debug-panel actions (009_game_unit_tests.txt Section 1.7) are logged with an explicit
+marker distinguishing them from ordinary player-issued commands, per Section 1.10.
+1.4.5. Logging never uses `print()` statements anywhere in the codebase, per
+005_game_coding_standards.txt Section 1.9.
+
+1.5. Philosophical Preamble
+A log is a promise that nothing important happened invisibly. The `.LOG` format baseline
+directive, preserved verbatim below, is expanded here into a full contract so that logging
+serves double duty: operational diagnostics for developers, and the auditable event trail
+that both the in-game log UI (004_game_menu_context_menus.txt Section 1.8) and the statistics
+model (010_game_player_statistics.txt) depend on.
+
+1.6. Original Baseline Directive (Preserved Verbatim)
+".LOG formatting"
+
+1.7. Log File Format and Location
+1.7.1. Log output uses the `.LOG` file extension, per the preserved baseline directive.
+1.7.2. Each log line includes, at minimum: ISO 8601 timestamp, log level, module/logger name,
+and message, formatted via the Python `logging` module's standard formatter configuration.
+1.7.3. Log files are written to a dedicated local `logs/` directory, rotated per session or
+by size, to avoid unbounded growth during extended play/testing.
+
+1.8. Log Levels and Usage
+| Level | Usage |
+|-------|-------|
+| DEBUG | Detailed internal state useful only during development (development builds only) |
+| INFO | Normal gameplay events: moves, combats, turns, captures (both build configurations) |
+| WARNING | Recoverable anomalies (e.g. a rejected illegal action) |
+| ERROR | Unexpected failures that do not crash the application |
+| CRITICAL | Failures that prevent the application from continuing |
+
+1.9. Structured Log Entry Contract
+Each gameplay-relevant log entry additionally captures, in a structured (not free-text-only)
+form: acting player, command type (per 006_game_scaffolding.txt Section 1.6 command list),
+turn number, phase, and outcome (success/rejected-with-reason), enabling
+010_game_player_statistics.txt to derive statistics directly from the log rather than from a
+separate, parallel tracking mechanism.
+
+1.10. Debug-Action Log Marking
+Every debug-panel action (009_game_unit_tests.txt Section 1.7) is logged with an explicit
+`is_debug_action: true` structured field (or equivalent marker), ensuring debug-driven state
+changes are never silently conflated with genuine player actions in statistics or the event
+log.
+
+1.11. Summary Table
+| Aspect | Rule |
+|--------|------|
+| File format | `.LOG` (preserved baseline) |
+| Output mechanism | Python `logging` module only, never `print()` |
+| Levels | DEBUG, INFO, WARNING, ERROR, CRITICAL |
+| Structured fields | Player, command type, turn, phase, outcome |
+| Debug marking | Explicit `is_debug_action` field on debug-panel-originated entries |
+
+1.12. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| Original baseline (this file, pre-existing) | ".LOG formatting" | Preserved verbatim in Section 1.6; elaborated into full logging contract (Sections 1.7-1.10) | Reconciled |
+
+1.13. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Free-text-only logging making statistics derivation unreliable | Medium | High | 1.9 mandates structured fields on every gameplay-relevant entry |
+| Debug actions polluting genuine player statistics | Low | Medium | 1.10 mandates an explicit debug marker, filtered out by 010_game_player_statistics.txt |
+| Unbounded log file growth during long development sessions | Low | Low | 1.7.3 mandates rotation by session or size |
+
+1.14. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain logging standards | R | C | A | I |
+| Enforce no-`print()` rule | C | R | A | I |
+
+1.15. Conclusion
+The `.LOG` baseline directive is preserved verbatim and elaborated into a structured logging
+contract that serves both operational diagnostics and the statistics/event-log needs of the
+rest of the corpus.
+
+1.16. References and Citations
+1.16.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14 (including
+the binding rule against removing existing baseline text).
+1.16.2. Internal: game_specifications/005_game_coding_standards.txt §1.9 (`logging` module,
+never `print()`).
+1.16.3. Internal: game_specifications/010_game_player_statistics.txt (statistics derived
+from structured log entries).
+1.16.4. Internal: game_specifications/015_game_deployment.txt §1.6 (build-configuration log
+verbosity).
+1.16.5. Internal: game_specifications/009_game_unit_tests.txt §1.7 (debug panel actions).
+
+1.17. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Expanded pre-existing ".LOG formatting" baseline (preserved verbatim in Section 1.6) into a full logging standards document: file format, levels, structured entry contract, debug-action marking. | Major |

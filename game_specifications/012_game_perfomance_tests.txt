@@ -1,0 +1,155 @@
+1. Game Performance Tests (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Performance Test Scope
+1.6.1. Command Latency
+1.6.2. Full-Match Simulation Throughput
+1.6.3. Board-Size Scaling
+1.6.4. Persistence Latency
+1.6.5. Balance/Statistical Simulation
+1.7. Performance Budgets
+1.8. Tooling
+1.9. Summary Table
+1.10. Reconciliation Table
+1.11. Risk and Mitigation Table
+1.12. Roles and Responsibilities (RACI)
+1.13. Conclusion
+1.14. References and Citations
+1.15. Changelog Table
+
+1.1. Abstract
+This document specifies performance-tier tests for X Paradox X: per-command latency budgets,
+full-match simulation throughput, board-size scaling behavior, persistence latency, and
+large-sample statistical balance simulation of the invented combat stat-blocks
+(017_game_rules.txt Section 1.7.2).
+
+1.2. Key Words
+performance test, latency budget, throughput, board-size scaling, balance simulation,
+statistical sampling.
+
+1.3. Executive Summary
+Performance tests validate that X Paradox X remains responsive at every supported board size
+and, distinctively for this project, that its invented combat stat-blocks and card
+rank-magnitude mapping produce a statistically reasonable balance of outcomes across a large
+number of simulated matches, directly supporting the provisional-balance caveat declared in
+017_game_rules.txt Section 1.7.4.
+
+1.4. Key Findings
+1.4.1. A single player command (move, attack, play card, purchase upgrade) must resolve
+within a documented latency budget (Section 1.7) at every supported board size, per
+017_game_rules.txt Section 1.6.1.
+1.4.2. A full simulated match (two heuristic/random agents playing to a victory condition)
+must complete within a documented time budget, enabling large-sample balance simulation runs.
+1.4.3. Board-size scaling tests specifically measure whether performance degrades
+acceptably (not catastrophically) from 4x4 to 8x8 and to a large custom size.
+1.4.4. Balance/statistical simulation is the mechanism by which the provisional Bishop
+upgrade-role assignment (017_game_rules.txt Section 1.7.4) and piece combat stat-blocks
+(017_game_rules.txt Section 1.7.2) are empirically reviewed, per that document's own
+forward reference.
+1.4.5. Persistence (save/restore) latency is measured separately from in-match command
+latency, since it is dominated by serialization cost rather than rules-engine computation.
+
+1.5. Philosophical Preamble
+Performance testing here plays a second role beyond speed: it is the empirical check on
+every hallucination-envelope invocation in 017_game_rules.txt that concerns numeric balance.
+A fast game that is badly balanced is not yet finished; the large-sample simulation in
+Section 1.6.5 is how "provisional" becomes "confirmed" or "revised."
+
+1.6. Performance Test Scope
+
+1.6.1. Command Latency
+Each command type (MOVE_PIECE, ATTACK_PIECE, PLAY_CARD, PURCHASE_UPGRADE, SKIP_PHASE,
+END_TURN, per 006_game_scaffolding.txt Section 1.6) is measured for resolution latency under
+the budgets in Section 1.7.
+
+1.6.2. Full-Match Simulation Throughput
+A full simulated match between two heuristic/random agents (reusing the Adviser's
+deterministic heuristic fallback, per 016_game_modes.txt Section 1.7.4) completes within the
+budget in Section 1.7, enabling repeated large-sample runs.
+
+1.6.3. Board-Size Scaling
+Command latency and full-match duration are measured at 4x4, 6x6 (default), and 8x8, per
+017_game_rules.txt Section 1.6.1, to confirm degradation remains proportional rather than
+exponential.
+
+1.6.4. Persistence Latency
+Save and restore operations (015_game_deployment.txt) are measured independently, at each
+supported board size, against the budget in Section 1.7.
+
+1.6.5. Balance/Statistical Simulation
+A large sample (minimum 1,000 simulated matches, per Section 1.7) using the heuristic
+fallback agents on both sides is run to produce: win-rate distribution, victory-condition
+frequency distribution, and per-piece-type combat win-rate (010_game_player_statistics.txt
+Section 1.8.2), to empirically evaluate the invented stat-blocks and the provisional
+Bishop-only upgrade rule.
+
+1.7. Performance Budgets
+| Metric | Budget |
+|--------|--------|
+| Single command resolution (any board size) | < 50 ms |
+| Full simulated match (6x6 default, heuristic vs. heuristic) | < 2 s |
+| Save operation | < 200 ms |
+| Restore operation | < 200 ms |
+| Balance simulation sample size (minimum) | 1,000 matches |
+| Balance simulation total wall-clock time (minimum sample) | < 10 minutes |
+These are engineering targets for a hackathon-scale prototype, not sourced from an external
+benchmark; declared here as ordinary engineering targets rather than a hallucination-envelope
+invocation, since they describe non-gameplay-affecting implementation performance rather than
+game rules or content.
+
+1.8. Tooling
+1.8.1. `pytest-benchmark` (or equivalent) for command-latency and persistence-latency
+measurement.
+1.8.2. A dedicated, non-pytest simulation harness script for the large-sample balance
+simulation in Section 1.6.5, since 1,000+ match runs are not suited to the standard test
+runner's per-test overhead.
+
+1.9. Summary Table
+| # | Scope | Primary Metric |
+|---|-------|-------------------|
+| 1 | Command latency | Milliseconds per command |
+| 2 | Full-match throughput | Seconds per simulated match |
+| 3 | Board-size scaling | Latency/duration delta across 4x4/6x6/8x8 |
+| 4 | Persistence latency | Milliseconds per save/restore |
+| 5 | Balance simulation | Win-rate and combat win-rate distributions over 1,000+ matches |
+
+1.10. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| (New) | File was empty | Performance scope, budgets, and a dedicated balance-simulation mechanism established, tied to 017_game_rules.txt's provisional stat-block caveats | Added |
+
+1.11. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Balance simulation revealing a badly skewed piece or upgrade | Medium | Medium | Explicitly the intended outcome to catch; feeds back into a revision of 017_game_rules.txt Section 1.7.2/1.7.4 |
+| Performance budgets treated as gameplay-affecting values requiring a hallucination envelope | Low | Low | 1.7 explicitly clarifies these are engineering targets, not game content |
+| Large-sample simulation excessively slowing CI | Medium | Medium | 014_game_cicd.txt may run the full 1,000-match simulation on a slower/scheduled pipeline stage rather than every commit |
+
+1.12. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain performance budgets | R | C | A | I |
+| Run and interpret balance simulation | R | C | A | A/Stakeholder (game owner) |
+
+1.13. Conclusion
+Performance testing for X Paradox X serves the ordinary purpose of responsiveness validation
+and the distinctive purpose of empirically grounding every provisional, invented balance
+value declared in 017_game_rules.txt.
+
+1.14. References and Citations
+1.14.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.14.2. Internal: game_specifications/008_game_testing.txt (testing pyramid).
+1.14.3. Internal: game_specifications/017_game_rules.txt §1.7.2, §1.7.4 (provisional
+stat-blocks and upgrade-role assignment requiring empirical review).
+1.14.4. Internal: game_specifications/010_game_player_statistics.txt §1.8 (derived
+statistics reused for balance analysis).
+1.14.5. Internal: game_specifications/016_game_modes.txt §1.7.4 (heuristic fallback agent
+reused as the simulation opponent).
+
+1.15. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: performance scope, budgets, tooling, and balance-simulation mechanism. | Major |

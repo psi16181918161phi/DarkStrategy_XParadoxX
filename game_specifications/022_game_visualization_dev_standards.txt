@@ -1,1 +1,128 @@
-Follow aesthetic standards document -- single image per instance, and in PNG format only. All relevant screenshots must be included in the game specification document, with clear captions and references to the relevant sections of the text.
+1. Game Visualization Development Standards (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Original Baseline Directive (Preserved Verbatim)
+1.7. Screenshot Format Rule
+1.8. Captioning and Section-Reference Rule
+1.9. Aesthetic Compliance Rule
+1.10. Applicability
+1.11. Summary Table
+1.12. Reconciliation Table
+1.13. Risk and Mitigation Table
+1.14. Roles and Responsibilities (RACI)
+1.15. Conclusion
+1.16. References and Citations
+1.17. Changelog Table
+
+1.1. Abstract
+This document specifies visualization/screenshot standards for X Paradox X's specification
+corpus, elaborating the original baseline directive into concrete rules for image format,
+captioning, and cross-referencing, and binding all such images to the palette and visual
+identity defined in 002_game_aesthetics.txt.
+
+1.2. Key Words
+visualization, screenshot, PNG, caption, cross-reference, aesthetic compliance.
+
+1.3. Executive Summary
+Every screenshot included in any X Paradox X specification document is a single image per
+instance, in PNG format only, accompanied by a clear caption and an explicit reference to the
+section of text it illustrates, and must visually conform to the palette/typography rules in
+002_game_aesthetics.txt.
+
+1.4. Key Findings
+1.4.1. Exactly one image is used per illustrated instance (no multi-panel composite images),
+per the preserved baseline directive.
+1.4.2. PNG is the only accepted image format, per the preserved baseline directive, chosen
+for lossless quality suited to UI screenshots containing text and sharp geometric shapes
+(002_game_aesthetics.txt Section 1.8 piece/tile visual language).
+1.4.3. Every included screenshot requires a caption and an explicit reference to the relevant
+section(s) of the surrounding text, per the preserved baseline directive.
+1.4.4. Screenshots must reflect the aesthetic standards document (002_game_aesthetics.txt),
+i.e. actual palette variants, typography, and visual language, not placeholder or
+inconsistent styling.
+1.4.5. This document governs documentation-embedded screenshots specifically; it does not
+redefine UI layout (004_game_menu_context_menus.txt) or palette values
+(002_game_aesthetics.txt), both of which remain governed by their own documents.
+
+1.5. Philosophical Preamble
+A screenshot embedded in a specification document is a claim about what the game actually
+looks like; an uncaptioned or unreferenced image is a claim nobody can verify or locate. This
+document exists to keep every visual artifact in the corpus traceable to the text it
+supports and faithful to the aesthetic canon it depicts.
+
+1.6. Original Baseline Directive (Preserved Verbatim)
+"Follow aesthetic standards document -- single image per instance, and in PNG format only.
+All relevant screenshots must be included in the game specification document, with clear
+captions and references to the relevant sections of the text."
+
+1.7. Screenshot Format Rule
+1.7.1. PNG format only (per Section 1.6); no JPEG, GIF, WEBP, BMP, or other raster/vector
+formats.
+1.7.2. Exactly one image per illustrated instance; composite/multi-panel images are not
+used, per Section 1.6.
+
+1.8. Captioning and Section-Reference Rule
+1.8.1. Every embedded screenshot carries a caption describing what it depicts.
+1.8.2. Every embedded screenshot's caption includes an explicit reference to the section(s)
+of the surrounding document text that it illustrates (e.g. "See Section 1.7, Game screen
+desktop layout").
+
+1.9. Aesthetic Compliance Rule
+Every screenshot must depict the game rendered per 002_game_aesthetics.txt's approved
+palette variant(s), typography, and piece/tile visual language; a screenshot depicting an
+unapproved or placeholder visual style does not satisfy this standard and must not be
+included.
+
+1.10. Applicability
+This standard applies to all specification documents in `game_specifications/` that embed
+screenshots, including but not limited to 004_game_menu_context_menus.txt (screen layouts)
+and 002_game_aesthetics.txt (palette/typography examples), and to any future document that
+embeds a screenshot.
+
+1.11. Summary Table
+| Rule | Requirement |
+|------|-------------|
+| Image count | Exactly one image per instance (preserved baseline) |
+| Image format | PNG only (preserved baseline) |
+| Caption | Required, clear, descriptive (preserved baseline) |
+| Section reference | Required, explicit (preserved baseline) |
+| Aesthetic compliance | Must depict an approved palette variant/visual language (002_game_aesthetics.txt) |
+
+1.12. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| Original baseline (this file, pre-existing) | "Follow aesthetic standards document -- single image per instance, and in PNG format only. All relevant screenshots must be included in the game specification document, with clear captions and references to the relevant sections of the text." | Preserved verbatim in Section 1.6; decomposed into format (1.7), captioning/reference (1.8), and aesthetic-compliance (1.9) rules | Reconciled |
+
+1.13. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Screenshots embedded without a caption or section reference, becoming untraceable | Medium | Low | 1.8 makes both mandatory, not optional |
+| Non-PNG images introduced for convenience (e.g. a quick JPEG export) | Low | Low | 1.7.1 restricts to PNG only, per the preserved baseline |
+| Screenshots depicting an outdated or placeholder visual style once 002_game_aesthetics.txt changes | Medium | Medium | 1.9 requires aesthetic-compliance review whenever 002_game_aesthetics.txt is revised |
+
+1.14. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain visualization standards | R | C | A | I |
+| Verify aesthetic compliance of embedded screenshots | C | R | A | A/Stakeholder (game owner) |
+
+1.15. Conclusion
+The original screenshot-standards directive is preserved verbatim and elaborated into
+concrete format, captioning, and aesthetic-compliance rules that keep every visual artifact
+in the corpus traceable and faithful to the approved visual identity.
+
+1.16. References and Citations
+1.16.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14 (including
+the binding rule against removing existing baseline text).
+1.16.2. Internal: game_specifications/002_game_aesthetics.txt (palette, typography, visual
+language screenshots must comply with).
+1.16.3. Internal: game_specifications/004_game_menu_context_menus.txt (screens most likely
+to be illustrated by screenshots).
+
+1.17. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Expanded pre-existing screenshot-standards baseline (preserved verbatim in Section 1.6) into a full visualization development standards document: format, captioning/reference, and aesthetic-compliance rules. | Major |

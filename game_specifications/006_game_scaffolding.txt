@@ -1,0 +1,150 @@
+1. Game Scaffolding (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Repository Layout
+1.7. Module Responsibilities
+1.8. Scaffolding Rules
+1.9. Summary Table
+1.10. Reconciliation Table
+1.11. Risk and Mitigation Table
+1.12. Roles and Responsibilities (RACI)
+1.13. Conclusion
+1.14. References and Citations
+1.15. Changelog Table
+
+1.1. Abstract
+This document defines the package/module scaffolding for the X Paradox X Python backend,
+adapting the module isolation plan first sketched in chatGPT_records/chat_record_30072026.md
+Section 7 into a concrete directory layout for this repository (DarkStrategy_XParadoxX).
+
+1.2. Key Words
+scaffolding, package layout, module boundaries, rules engine, services, tests, py.typed,
+repository structure.
+
+1.3. Executive Summary
+The backend is organized into five top-level packages — `game` (state and rules engines),
+`data` (static game data), `components`/`screens` equivalents exposed as API/service
+contracts for the Natively AI frontend, `services` (AI adviser, persistence), and `tests`
+(mirroring every package) — so that the rules engine remains fully decoupled from any
+presentation layer, per 003_game_philosophy.txt Section 1.6.1.
+
+1.4. Key Findings
+1.4.1. The scaffolding directly reuses and extends the module isolation plan from
+chatGPT_records/chat_record_30072026.md Section 7, adapted from a frontend-application
+layout to a Python-package layout appropriate for this py.typed repository.
+1.4.2. `game/` contains only deterministic rules-engine code; it must never import from a
+presentation or API layer.
+1.4.3. `services/aiAdviser` (rendered here as `services/ai_adviser` per Python naming
+convention, see 024_...naming_conventions.txt) must only read a serialized game-state summary
+and return recommended commands; it must never hold a reference to the live mutable game
+state.
+1.4.4. `tests/` mirrors every top-level package one-to-one, per 008_game_testing.txt and
+009_game_unit_tests.txt.
+1.4.5. Every package and sub-package contains an `__init__.py`; the repository root carries
+`py.typed` to advertise inline type information to consumers, per 005_game_coding_standards.txt
+Section 1.9.3.
+
+1.5. Philosophical Preamble
+Scaffolding is the skeleton that keeps a rapidly generated hackathon prototype from collapsing
+under its own hybrid-mechanic ambition. A directory layout is itself a claim about
+responsibility boundaries; getting it right before Natively AI generates a single file is
+cheaper than untangling coupled rules-and-UI code under a deadline.
+
+1.6. Repository Layout
+```
+DarkStrategy_XParadoxX/
+    game_specifications/         # this specification corpus
+    src/
+        game/
+            game_state.py         # immutable/safely-copied state container
+            turn_engine.py        # phase sequencing (Draw/Income/Move/Action/End Turn)
+            movement_engine.py    # chess-piece movement legality
+            combat_engine.py      # dice-based combat resolution
+            territory_engine.py   # capture, income, Dominion Points
+            card_engine.py        # 52-card deck, suit/rank ability resolution
+            upgrade_engine.py     # Fortress/Market/Relay
+            victory_engine.py     # territory / King capture / Dominion Points checks
+            event_log.py          # structured, human-readable event records
+            rng_service.py        # seeded random-number service
+        data/
+            pieces.py             # chess piece stat-blocks
+            cards.py              # 52-card suit/rank ability table
+            territories.py        # default territory layouts per board size
+            upgrades.py           # upgrade cost/effect table
+        services/
+            ai_adviser.py         # advisory-only recommendation service
+            persistence.py        # save/load (autosave, New/Continue/Reset)
+        api/
+            commands.py           # MOVE_PIECE, ATTACK_PIECE, PLAY_CARD, PURCHASE_UPGRADE,
+                                   # SKIP_PHASE, END_TURN command schema for the Natively AI
+                                   # frontend to invoke
+    tests/
+        game/
+        data/
+        services/
+        api/
+```
+
+1.7. Module Responsibilities
+| Package | Responsibility | Must Never |
+|---------|------------------|------------|
+| `src/game` | All rules, state transitions, validation | Import from `api` or any presentation layer |
+| `src/data` | Static, versioned game data tables | Contain executable rules logic |
+| `src/services` | AI adviser, persistence | Mutate state directly from `ai_adviser` |
+| `src/api` | Command schema/contract for the frontend | Contain rules logic itself |
+| `tests` | Mirror of all packages above | Depend on production data changing test outcomes without a seeded RNG |
+
+1.8. Scaffolding Rules
+1.8.1. No package may exceed a single clearly named responsibility (see
+005_game_coding_standards.txt Section 1.7.4).
+1.8.2. Every new module requires a corresponding test module in `tests/` before it is
+considered complete, per 009_game_unit_tests.txt.
+1.8.3. Cross-package imports flow one direction only: `data` -> `game` -> `services`/`api`;
+reverse imports are disallowed to prevent circular dependencies (see
+023_game_modules_imports.txt).
+
+1.9. Summary Table
+| Package | Key Modules |
+|---------|--------------|
+| game | game_state, turn_engine, movement_engine, combat_engine, territory_engine, card_engine, upgrade_engine, victory_engine, event_log, rng_service |
+| data | pieces, cards, territories, upgrades |
+| services | ai_adviser, persistence |
+| api | commands |
+
+1.10. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| chat_record_30072026.md Section 7 | Frontend-application module isolation plan (`/game`, `/data`, `/components`, `/screens`, `/services`, `/tests`) | Adapted to a Python-package layout (`src/game`, `src/data`, `src/services`, `src/api`, `tests/`), since this repository is the Python backend rather than the generated frontend | Reconciled |
+
+1.11. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Rules logic leaking into `api` or `services` under time pressure | Medium | High | 1.8.3 import direction rule enforced via lint/import-graph check in CI (see 014_game_cicd.txt) |
+| Missing `__init__.py` or `py.typed` breaking type distribution | Low | Medium | Scaffolding checklist item in code review |
+| Test package drifting out of sync with production package structure | Medium | Medium | 1.8.2 mandates a test module per new production module |
+
+1.12. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain repository layout | R | C | A | I |
+| Approve new top-level packages | C | R | A | I |
+
+1.13. Conclusion
+The scaffolding isolates the deterministic rules engine from data, services, and the
+API/frontend contract, directly fulfilling the architecture principle carried forward from
+the original ideation session.
+
+1.14. References and Citations
+1.14.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.14.2. Internal: chatGPT_records/chat_record_30072026.md Section 7 (Architecture to request
+from Natively AI, 2026-07-30).
+1.14.3. Internal: game_specifications/005_game_coding_standards.txt (structural discipline).
+1.14.4. Internal: game_specifications/023_game_modules_imports.txt (import direction rules).
+
+1.15. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: Python package scaffolding adapted from the original frontend module-isolation plan. | Major |

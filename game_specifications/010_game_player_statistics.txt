@@ -1,0 +1,135 @@
+1. Game Player Statistics (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Per-Match Statistics
+1.7. Per-Session Statistics
+1.8. Derived/Formula-Based Statistics
+1.9. Statistic Data Contract
+1.10. Summary Table
+1.11. Reconciliation Table
+1.12. Risk and Mitigation Table
+1.13. Roles and Responsibilities (RACI)
+1.14. Conclusion
+1.15. References and Citations
+1.16. Changelog Table
+
+1.1. Abstract
+This document defines the player and match statistics tracked by X Paradox X, their formulas,
+and their storage contract, extending the event-log foundation defined in
+020_game_logging_standards.txt and the victory conditions defined in 017_game_rules.txt into
+a concrete statistics model.
+
+1.2. Key Words
+player statistics, match statistics, Dominion Points, win rate, combat record, territory
+history, telemetry, derived metrics.
+
+1.3. Executive Summary
+X Paradox X tracks a compact set of per-match and per-session statistics for each of the two
+local players: territories captured/lost, combat records, credits earned/spent, Dominion
+Points accrued, cards played, and the eventual match outcome. These statistics are derived
+entirely from the structured event log (020_game_logging_standards.txt) and the deterministic
+rules engine (017_game_rules.txt); no statistic is computed from an untracked or
+non-reproducible source.
+
+1.4. Key Findings
+1.4.1. All statistics are derived, at the end of a match, from the same structured event log
+used for the turn log UI element (004_game_menu_context_menus.txt Section 1.8), guaranteeing
+consistency between what the player saw and what is recorded.
+1.4.2. Per-match statistics reset at the start of each new match; per-session statistics
+accumulate across matches played within one local application session/save file.
+1.4.3. No statistic requires a network connection or user account, consistent with the MVP
+scope boundary in 001_game_concept.txt Section 1.9.2.
+1.4.4. Combat statistics (wins/losses/ties per the dice-resolution table in
+017_game_rules.txt Section 1.7.3) are tracked per piece type, enabling future balance review
+of the invented combat stat-blocks (017_game_rules.txt Section 1.7.2).
+1.4.5. Statistics are read-only presentation derived from engine state; no statistics-display
+code path may write back into game state, preserving the deterministic-engine principle
+(003_game_philosophy.txt Section 1.6.1).
+
+1.5. Philosophical Preamble
+A statistic is a claim about history, and a claim about history is only trustworthy if it
+traces back to an auditable record. X Paradox X's statistics exist to let a player see the
+shape of a match after it ends, not to introduce a second, parallel source of truth alongside
+the rules engine's own state.
+
+1.6. Per-Match Statistics
+| Statistic | Description |
+|-----------|--------------|
+| Territories captured | Count of territories captured by each player during the match |
+| Territories lost | Count of territories lost by each player during the match |
+| Combat initiated | Count of attacks initiated by each player |
+| Combat won / tied / lost | Count of each combat outcome per 017_game_rules.txt Section 1.7.3 |
+| Pieces lost | Count of pieces reduced to 0 HP, per player |
+| Credits earned / spent | Running totals per player |
+| Dominion Points accrued | Running total per player |
+| Cards drawn / played | Count per player |
+| Upgrades purchased | Count per upgrade type, per player |
+| Match outcome | Winning condition per 017_game_rules.txt Section 1.11, winner, turn count at victory |
+
+1.7. Per-Session Statistics
+| Statistic | Description |
+|-----------|--------------|
+| Matches played | Total matches completed in the local save/session |
+| Matches won (per player identity, e.g. "Player One seat") | Total wins by seat, not by network identity, per MVP scope |
+| Average turn count per match | Mean turns-to-victory across completed matches |
+| Victory-condition frequency | Count of matches won by each of the three victory paths |
+
+1.8. Derived/Formula-Based Statistics
+1.8.1. Win rate (per seat) = matches won by that seat / matches played.
+1.8.2. Combat win rate (per piece type) = combats won / combats initiated, for that piece
+type, across all tracked matches.
+1.8.3. Average Dominion Points per turn = final Dominion Points / turn count at match end.
+1.8.4. All derived statistics are computed at display time from the stored per-match/
+per-session raw counters; none are persisted as an independently mutable value.
+
+1.9. Statistic Data Contract
+1.9.1. Statistics are serialized using the accepted data formats in
+021_game_data_standards.txt (JSON preferred for the local save file).
+1.9.2. Statistics persist alongside the autosave described in 015_game_deployment.txt and
+are cleared only by an explicit Reset Match/Reset Session action, never silently.
+
+1.10. Summary Table
+| Scope | Example Statistics |
+|-------|----------------------|
+| Per-match | Territories captured/lost, combat record, credits, Dominion Points, cards, upgrades, outcome |
+| Per-session | Matches played, wins per seat, average turn count, victory-condition frequency |
+| Derived | Win rate, combat win rate per piece, average Dominion Points per turn |
+
+1.11. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| (New) | File was empty | Full per-match/per-session/derived statistics model established, sourced from the event log and rules engine | Added |
+
+1.12. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Statistics drifting out of sync with the actual event log | Medium | Medium | Statistics are computed from the event log, never tracked independently (1.6, 1.9.2) |
+| Combat stat-block imbalance hidden without per-piece tracking | Medium | Medium | 1.4.4 mandates per-piece-type combat statistics specifically to surface this |
+| Statistics file corruption on unexpected shutdown | Low | Medium | Persistence rules in 015_game_deployment.txt govern autosave durability |
+
+1.13. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain statistics model | R | C | A | I |
+| Use combat statistics for balance review | C | R | A | A/Stakeholder (game owner) |
+
+1.14. Conclusion
+X Paradox X's statistics model gives players and designers an auditable, event-log-derived
+view of match history, with explicit per-piece combat tracking to support future rebalancing
+of the invented combat stat-blocks.
+
+1.15. References and Citations
+1.15.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.15.2. Internal: game_specifications/017_game_rules.txt (combat/victory mechanics).
+1.15.3. Internal: game_specifications/020_game_logging_standards.txt (event log source of
+truth).
+1.15.4. Internal: game_specifications/021_game_data_standards.txt (serialization format).
+1.15.5. Internal: game_specifications/015_game_deployment.txt (persistence).
+
+1.16. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: per-match, per-session, and derived player statistics model. | Major |

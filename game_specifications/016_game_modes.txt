@@ -1,0 +1,147 @@
+1. Game Modes (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Local Pass-and-Play Mode (MVP)
+1.7. AI Adviser Mode ("Consult the Oracle")
+1.7.1. Adviser Input Contract
+1.7.2. Adviser Output Contract
+1.7.3. Adviser Constraints
+1.7.4. Deterministic Heuristic Fallback
+1.8. Deferred Modes
+1.9. Summary Table
+1.10. Reconciliation Table
+1.11. Risk and Mitigation Table
+1.12. Roles and Responsibilities (RACI)
+1.13. Conclusion
+1.14. References and Citations
+1.15. Changelog Table
+
+1.1. Abstract
+This document defines the supported game modes for X Paradox X: the MVP local pass-and-play
+mode and the optional AI Adviser feature, and explicitly defers all other modes (online
+multiplayer, fully autonomous AI opponents) to 018_future_wishlist_items.txt, per
+001_game_concept.txt Section 1.9.
+
+1.2. Key Words
+game modes, local pass-and-play, AI adviser, Consult the Oracle, advisory-only, heuristic
+fallback, deferred modes.
+
+1.3. Executive Summary
+X Paradox X ships exactly one playable mode at MVP: two-player local pass-and-play. Layered
+on top of it is an optional, advisory-only AI feature, "Consult the Oracle," which recommends
+one legal move, one alternative, an explanation, and a risk rating, without ever mutating
+game state directly. All other conceivable modes (online multiplayer, autonomous AI
+opponents, ranked play) are explicitly out of MVP scope and tracked in
+018_future_wishlist_items.txt.
+
+1.4. Key Findings
+1.4.1. Local pass-and-play is the only mode required to be functional for the hackathon
+demo, per 001_game_concept.txt Section 1.9.1.
+1.4.2. The AI Adviser must never directly mutate game state; every suggested command is
+validated by the same rules engine that validates human player commands, per
+003_game_philosophy.txt Section 1.6.3.
+1.4.3. If no external AI service is configured or reachable, the Adviser falls back to a
+deterministic heuristic recommender so the feature remains demonstrable without a live
+network dependency, retained unchanged from the original ideation session.
+1.4.4. A one-player-vs-autonomous-AI mode and online multiplayer are both explicitly
+deferred, per the original ideation session's own MVP scoping ("One simple AI opponent only
+if time permits... No online multiplayer").
+1.4.5. The Adviser's recommendations are computed from a compact, serialized game-state
+summary, not a live reference to mutable engine state, per 006_game_scaffolding.txt Section
+1.7.
+
+1.5. Philosophical Preamble
+A "mode" is a promise about what kind of agency the player has surrendered, if any, to
+automation. X Paradox X's philosophy (003_game_philosophy.txt Section 1.6.3) draws a hard
+line: automation may advise, but the player and the deterministic rules engine remain the
+sole authorities over outcomes. This principle is what allows an AI feature to exist in a
+hackathon-scale prototype without threatening the game's core promise of auditable fairness.
+
+1.6. Local Pass-and-Play Mode (MVP)
+1.6.1. Two players share one device; turns alternate strictly per the phase order in
+017_game_rules.txt Section 1.8.
+1.6.2. No account, login, or network connection is required.
+1.6.3. Match state autosaves locally per 015_game_deployment.txt persistence rules, allowing
+a paused match to be resumed via Continue Game (004_game_menu_context_menus.txt Section
+1.7.6).
+
+1.7. AI Adviser Mode ("Consult the Oracle")
+
+1.7.1. Adviser Input Contract
+A compact, serialized summary of the current game state: board size, piece positions and
+HP, territory ownership, credits, Dominion Points, current hand (for the requesting player
+only), and turn/phase.
+
+1.7.2. Adviser Output Contract
+| Field | Description |
+|-------|--------------|
+| Recommended move | One legal command (per 017_game_rules.txt mechanics) |
+| Alternative move | One additional legal command |
+| Explanation | A concise, plain-language rationale |
+| Risk rating | Low, Moderate, or High |
+
+1.7.3. Adviser Constraints
+1.7.3.1. The Adviser never mutates game state; it only returns a recommendation.
+1.7.3.2. Every Adviser-suggested command is passed through the same rules-engine validation
+path as a human-issued command before it can be previewed to the player (see
+004_game_menu_context_menus.txt Section 1.9 two-step confirm model).
+1.7.3.3. The Adviser must not introduce new rules, cards, pieces, or mechanics not defined in
+017_game_rules.txt.
+
+1.7.4. Deterministic Heuristic Fallback
+If no external AI/model service is configured or reachable, the Adviser uses a deterministic,
+rules-based heuristic (e.g. prefer moves that capture an undefended territory, then moves
+that avoid an unfavorable combat trade) so the feature remains demonstrable offline, retained
+unchanged from the original ideation session.
+
+1.8. Deferred Modes
+The following modes are explicitly out of MVP scope and tracked in
+018_future_wishlist_items.txt: fully autonomous single-player AI opponent (beyond the
+advisory Oracle), ranked/competitive online multiplayer, spectator mode, and any mode
+requiring user accounts.
+
+1.9. Summary Table
+| Mode | Status | Player Count | Network Required |
+|------|--------|---------------|---------------------|
+| Local pass-and-play | MVP, required | 2 | No |
+| AI Adviser ("Consult the Oracle") | MVP, optional feature | 2 (adviser assists either) | No (heuristic fallback) |
+| Autonomous AI opponent | Deferred | 1 vs AI | No (planned) |
+| Online multiplayer | Deferred | 2 (remote) | Yes |
+
+1.10. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| chat_record_30072026.md Section 5 | "AI feature that is feasible" - advisory-only Oracle with heuristic fallback | Retained unchanged as Section 1.7 | Reconciled |
+| chat_record_30072026.md Section 1 | "One simple AI opponent only if time permits... No online multiplayer" | Formalized as explicitly deferred modes (Section 1.8) | Reconciled |
+
+1.11. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Adviser feature scope-creeping into autonomous play | Medium | High | 1.7.3 constraints are binding; any autonomous-play request is routed to 018 instead |
+| External AI service unavailable during the live demo | Medium | Medium | 1.7.4 deterministic heuristic fallback guarantees demonstrability |
+| Adviser suggesting an illegal move due to stale state | Low | Medium | 1.7.3.2 mandates re-validation through the rules engine before preview |
+
+1.12. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain mode list and constraints | R | C | A | I |
+| Implement/validate Adviser fallback heuristic | R | C | A | I |
+
+1.13. Conclusion
+X Paradox X ships one required mode (local pass-and-play) and one optional advisory-only AI
+feature, with all further modes explicitly deferred and tracked for future consideration.
+
+1.14. References and Citations
+1.14.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.14.2. Internal: chatGPT_records/chat_record_30072026.md Section 5 (AI feature that is
+feasible) and Section 1 (Core MVP), 2026-07-30.
+1.14.3. Internal: game_specifications/017_game_rules.txt (mechanics the Adviser must respect).
+1.14.4. Internal: game_specifications/018_future_wishlist_items.txt (deferred modes).
+
+1.15. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: local pass-and-play as required MVP mode, AI Adviser contract and constraints, deferred modes list. | Major |

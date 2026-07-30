@@ -1,0 +1,145 @@
+1. Game End-to-End Testing (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. End-to-End Test Scope
+1.6.1. Full-Screen-Flow Playthrough
+1.6.2. Two-Step Confirm Interaction
+1.6.3. Palette Variant Switching
+1.6.4. Responsive Layout (Desktop/Landscape and Narrow/Mobile)
+1.6.5. Continue Game / Resume Flow
+1.6.6. Results Screen and Post-Victory Lock
+1.7. Tooling
+1.8. Summary Table
+1.9. Reconciliation Table
+1.10. Risk and Mitigation Table
+1.11. Roles and Responsibilities (RACI)
+1.12. Conclusion
+1.13. References and Citations
+1.14. Changelog Table
+
+1.1. Abstract
+This document specifies end-to-end (E2E) tests for X Paradox X: full user-facing flows from
+Main Menu through a complete match to the Results screen, exercised through the actual UI
+layer defined in 004_game_menu_context_menus.txt, forming the top tier of the testing pyramid
+established in 008_game_testing.txt.
+
+1.2. Key Words
+end-to-end test, E2E, playthrough, two-step confirm, palette variant, responsive layout,
+Results screen.
+
+1.3. Executive Summary
+Where 011_game_integration_tests.txt proves module-level cooperation, end-to-end tests prove
+that a human player, interacting only through the screens and context menus defined in
+004_game_menu_context_menus.txt, can complete an entire match under each of the three victory
+conditions, on both palette variants, at both the desktop/landscape and narrow/mobile
+layouts.
+
+1.4. Key Findings
+1.4.1. At least one full playthrough test exists per victory condition (territory majority,
+King capture, Dominion Points threshold), per 017_game_rules.txt Section 1.11.
+1.4.2. The two-step select-then-confirm interaction model (004_game_menu_context_menus.txt
+Section 1.9) is explicitly exercised for movement, attack, card-play, and upgrade-purchase,
+including the cancel path at the confirm step.
+1.4.3. Both palette variants (Dark and Light, per 002_game_aesthetics.txt Section 1.6) are
+exercised in at least one full playthrough each, to catch variant-specific legibility
+regressions.
+1.4.4. Both responsive layouts (desktop/landscape three-column and narrow/mobile
+collapsed-bar, per 004_game_menu_context_menus.txt Section 1.7) are exercised in at least one
+full playthrough each.
+1.4.5. The Continue Game flow (resuming an autosaved match, per 015_game_deployment.txt) and
+the Results screen's no-further-mutation guarantee are each dedicated E2E scenarios.
+
+1.5. Philosophical Preamble
+End-to-end tests are the closest a test suite comes to standing in the player's seat. They
+exist to answer one question the lower tiers cannot: does the finished experience, seen
+through the actual UI, deliver on the five-minute usability and legibility principles of
+003_game_philosophy.txt Section 1.6.4?
+
+1.6. End-to-End Test Scope
+
+1.6.1. Full-Screen-Flow Playthrough
+Main Menu -> Play -> Game screen -> complete match -> Results screen -> Play Again or Main
+Menu, exercised once per victory condition (three scenarios total), per
+004_game_menu_context_menus.txt Section 1.6 screen registry.
+
+1.6.2. Two-Step Confirm Interaction
+For movement, attack, card-play, and upgrade-purchase: select action, view confirm state,
+confirm (action applies) and, in a separate scenario, cancel (no state mutation), per
+004_game_menu_context_menus.txt Section 1.9.
+
+1.6.3. Palette Variant Switching
+Toggling between Dark and Light variants in Settings (004_game_menu_context_menus.txt Section
+1.11) is confirmed to apply immediately and to persist across a screen transition, per
+002_game_aesthetics.txt Section 1.6.
+
+1.6.4. Responsive Layout (Desktop/Landscape and Narrow/Mobile)
+The same full playthrough scenario (Section 1.6.1) is run once at a desktop/landscape
+viewport and once at a narrow/mobile viewport, confirming the layout differences described in
+004_game_menu_context_menus.txt Section 1.7 render correctly at each.
+
+1.6.5. Continue Game / Resume Flow
+Starting a match, closing/reloading the application, and selecting Continue Game from the
+Main Menu restores the exact in-progress state, per 015_game_deployment.txt persistence
+rules.
+
+1.6.6. Results Screen and Post-Victory Lock
+After a victory, the Results screen displays the correct winning condition and no further
+player action can mutate match state, per 009_game_unit_tests.txt Section 1.6.10 and
+004_game_menu_context_menus.txt Section 1.12.
+
+1.7. Tooling
+1.7.1. A browser/UI automation framework capable of driving the actual rendered UI (e.g. an
+in-repo Playwright-based harness, consistent with existing automation conventions already
+available in this environment) rather than calling engine code directly, to genuinely
+exercise the UI layer.
+1.7.2. E2E tests use the same seeded RNG service as lower tiers (009_game_unit_tests.txt
+Section 1.6.9) so playthrough outcomes remain deterministic and repeatable.
+
+1.8. Summary Table
+| # | Scope | Coverage |
+|---|-------|-----------|
+| 1 | Full-screen-flow playthrough | One per victory condition (3 total) |
+| 2 | Two-step confirm | Movement, attack, card-play, upgrade-purchase; confirm and cancel paths |
+| 3 | Palette variant switching | Dark and Light, applied and persisted |
+| 4 | Responsive layout | Desktop/landscape and narrow/mobile |
+| 5 | Continue Game / resume | Exact state restoration after reload |
+| 6 | Results screen / post-victory lock | Correct display; no further mutation |
+
+1.9. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| (New) | File was empty | Six end-to-end scenario groups established, each traced to a specific screen/mechanic document | Added |
+
+1.10. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| E2E suite becoming slow/flaky as the top testing tier | Medium | Medium | Seeded RNG (1.7.2) and a minimal scenario count (six groups) keep the suite bounded |
+| Palette or layout regressions missed because only one variant/layout is tested by default | Medium | Medium | 1.6.3/1.6.4 explicitly require both variants and both layouts to be exercised |
+| Continue Game flow diverging from a fresh-match flow undetected | Low | Medium | 1.6.5 is a dedicated, separate scenario rather than folded into 1.6.1 |
+
+1.11. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain E2E scenario scope | R | C | A | I |
+| Select/maintain UI automation tooling | R | C | A | I |
+
+1.12. Conclusion
+Six end-to-end scenario groups give X Paradox X confidence that a real player, using the
+actual UI across both palette variants and both responsive layouts, can complete a match
+under every victory condition without encountering a broken flow.
+
+1.13. References and Citations
+1.13.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.13.2. Internal: game_specifications/008_game_testing.txt (testing pyramid).
+1.13.3. Internal: game_specifications/004_game_menu_context_menus.txt (screens, two-step
+confirm model).
+1.13.4. Internal: game_specifications/002_game_aesthetics.txt (palette variants).
+1.13.5. Internal: game_specifications/015_game_deployment.txt (persistence/Continue Game).
+
+1.14. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: six end-to-end scenario groups covering full playthroughs, interaction model, palette variants, responsive layouts, resume flow, and post-victory lock. | Major |

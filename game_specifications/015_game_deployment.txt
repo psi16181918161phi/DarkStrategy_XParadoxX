@@ -1,0 +1,139 @@
+1. Game Deployment (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Build Configurations
+1.7. Persistence and Autosave
+1.7.1. Save Data Contents
+1.7.2. Save Triggers
+1.7.3. New / Continue / Reset
+1.8. Hackathon Submission Target (Natively AI)
+1.9. Summary Table
+1.10. Reconciliation Table
+1.11. Risk and Mitigation Table
+1.12. Roles and Responsibilities (RACI)
+1.13. Conclusion
+1.14. References and Citations
+1.15. Changelog Table
+
+1.1. Abstract
+This document specifies deployment build configurations and match-persistence behavior for
+X Paradox X, including the distinction between development and production builds referenced
+by 009_game_unit_tests.txt and 015's own role as the deployment target definition for the
+LabLab AI Factory hackathon submission built on Natively AI.
+
+1.2. Key Words
+deployment, build configuration, persistence, autosave, New/Continue/Reset, Natively AI,
+hackathon submission.
+
+1.3. Executive Summary
+X Paradox X ships as a Natively-AI-generated Python backend (this repository) paired with a
+web-rendered UI per 004_game_menu_context_menus.txt. Two build configurations exist:
+development (debug panel enabled, verbose logging) and production (debug panel disabled,
+per 009_game_unit_tests.txt Section 1.7.1). Match state autosaves continuously and supports
+New Game, Continue Game, and Reset Match flows.
+
+1.4. Key Findings
+1.4.1. This repository (DarkStrategy_XParadoxX) is confirmed, per explicit user direction,
+to be the actual Python backend implementation target for the Natively AI hackathon
+submission, not a throwaway planning artifact.
+1.4.2. Exactly two build configurations are defined: development and production; the debug
+panel (009_game_unit_tests.txt Section 1.7) is present only in development builds.
+1.4.3. Persistence uses a local save file (format per 021_game_data_standards.txt) rather
+than a networked database, consistent with the no-account, no-network MVP scope
+(001_game_concept.txt Section 1.9.2).
+1.4.4. Autosave triggers at the end of every completed turn (End Turn phase,
+017_game_rules.txt Section 1.8), not merely on application exit, to minimize data loss.
+1.4.5. Reset Match and Reset Session are distinct, explicit, user-confirmed actions
+(004_game_menu_context_menus.txt Settings screen) that never fire implicitly.
+
+1.5. Philosophical Preamble
+Deployment is the point where every prior design promise either survives contact with a real
+running build or does not. This document exists to make explicit what "shipped" means for a
+hackathon-scale prototype: two build configurations, one persistence contract, and one
+confirmed target platform.
+
+1.6. Build Configurations
+| Configuration | Debug Panel | Logging Verbosity | Intended Use |
+|-----------------|--------------|----------------------|-----------------|
+| Development | Enabled (009_game_unit_tests.txt §1.7) | Verbose (DEBUG level, per 020_game_logging_standards.txt) | Local development, automated testing |
+| Production | Disabled | Standard (INFO level and above) | Hackathon demo/submission build |
+
+1.7. Persistence and Autosave
+
+1.7.1. Save Data Contents
+Board size and layout, piece positions and HP, territory ownership and upgrades, each
+player's credits and Dominion Points, each player's hand and remaining deck order, current
+turn number and phase, RNG seed, and accumulated per-match/per-session statistics
+(010_game_player_statistics.txt).
+
+1.7.2. Save Triggers
+Autosave fires at the end of every End Turn phase (017_game_rules.txt Section 1.8) and
+immediately before application shutdown, if shutdown is detected gracefully.
+
+1.7.3. New / Continue / Reset
+1.7.3.1. New Game: initializes a fresh match at the player-selected board size
+(017_game_rules.txt Section 1.6.1), discarding any prior autosave for that save slot only
+after explicit confirmation.
+1.7.3.2. Continue Game: restores the most recent autosave exactly, offered on the Main Menu
+only when a valid autosave exists (004_game_menu_context_menus.txt Section 1.6.1).
+1.7.3.3. Reset Match: explicit, user-confirmed action (two-step confirm per
+004_game_menu_context_menus.txt Section 1.9) that discards the current match's state but
+retains per-session statistics (010_game_player_statistics.txt Section 1.7).
+
+1.8. Hackathon Submission Target (Natively AI)
+1.8.1. This repository is the Python backend generated for and submitted to the LabLab AI
+Factory hackathon via Natively AI, per explicit user confirmation during the 2026-07-30
+clarification session.
+1.8.2. The production build configuration (Section 1.6) is the configuration submitted for
+hackathon judging.
+1.8.3. No external paid services or accounts are required to run or judge the submission,
+consistent with the no-network MVP scope.
+
+1.9. Summary Table
+| Aspect | Behavior |
+|--------|-----------|
+| Build configurations | Development (debug panel, verbose logs), Production (neither) |
+| Persistence medium | Local save file, no network/database |
+| Autosave trigger | End of every End Turn phase, plus graceful shutdown |
+| New/Continue/Reset | Three distinct, explicitly confirmed flows |
+| Submission target | Natively AI, LabLab AI Factory hackathon, this repository as the backend |
+
+1.10. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| chat_record_30072026.md Section 7 (PERSISTENCE) | Informal New/Continue/Reset description | Formalized into Section 1.7.3 with explicit confirmation requirements | Reconciled |
+| User confirmation, 2026-07-30 session | Repo confirmed as the real Natively AI backend target | Documented explicitly in Section 1.8 | Reconciled |
+
+1.11. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Debug panel accidentally shipping in the production/submission build | Low | High | 1.6 and 009_game_unit_tests.txt §1.7.1 both gate it to development builds only |
+| Data loss from an ungraceful shutdown between End Turn autosaves | Low | Medium | 1.7.2 additionally autosaves at every End Turn, minimizing the loss window to at most one in-progress turn |
+| Reset Match ambiguity with Reset Session causing accidental statistics loss | Low | Medium | 1.7.3.3 explicitly scopes Reset Match to exclude per-session statistics |
+
+1.12. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain build/persistence configuration | R | C | A | I |
+| Confirm hackathon submission build | C | R | A | A/Stakeholder (game owner) |
+
+1.13. Conclusion
+X Paradox X's deployment contract defines exactly two build configurations and one
+persistence model, and confirms this repository as the real Natively AI hackathon submission
+backend rather than a disposable planning exercise.
+
+1.14. References and Citations
+1.14.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.14.2. Internal: chatGPT_records/chat_record_30072026.md Section 7 (Persistence),
+2026-07-30.
+1.14.3. Internal: game_specifications/001_game_concept.txt (MVP scope, repository purpose).
+1.14.4. Internal: game_specifications/009_game_unit_tests.txt §1.7 (debug panel build gating).
+1.14.5. Internal: game_specifications/021_game_data_standards.txt (save file format).
+
+1.15. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: build configurations, persistence/autosave contract, New/Continue/Reset flows, hackathon submission target confirmation. | Major |

@@ -1,0 +1,192 @@
+1. Game Menu and Context Menus (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Screen Inventory
+1.7. Main Menu Structure
+1.8. Game Screen Layout
+1.8.1. Desktop/Landscape Layout
+1.8.2. Narrow/Mobile Layout
+1.9. Interaction and Confirmation Model
+1.10. Context Menus
+1.10.1. Piece Context Menu
+1.10.2. Territory Context Menu
+1.10.3. Card Context Menu
+1.11. Settings Screen
+1.12. Results Screen
+1.13. Summary Table
+1.14. Reconciliation Table
+1.15. Risk and Mitigation Table
+1.16. Roles and Responsibilities (RACI)
+1.17. Conclusion
+1.18. References and Citations
+1.19. Changelog Table
+
+1.1. Abstract
+This document specifies the menu structure, screen inventory, interaction/confirmation
+model, and context-menu behavior for X Paradox X, extending the UI structure first sketched
+in chatGPT_records/chat_record_30072026.md Section 4 with concrete context-menu definitions
+required by this repository's file-naming convention (004_game_menu_context_menus.txt).
+
+1.2. Key Words
+main menu, game screen, context menu, confirmation, event log, settings, results screen,
+interaction model, two-step confirm, responsive layout.
+
+1.3. Executive Summary
+X Paradox X exposes five screens (Main Menu, How to Play, Game, Settings, Results) and three
+context menus (Piece, Territory, Card), all governed by a single interaction rule: a first
+tap/click selects and previews, a second tap/click confirms. No irreversible action may be
+triggered by a single input. Layout adapts between a three-column desktop/landscape
+arrangement and a stacked narrow/mobile arrangement without changing the underlying
+interaction model.
+
+1.4. Key Findings
+1.4.1. The Main Menu is deliberately minimal: Play, How to Play, Settings, Credits only; no
+login, shop, achievements, or social features, per 001_game_concept.txt Section 1.9.2 MVP
+exclusions.
+1.4.2. The Game screen always shows, regardless of layout: both players' credits and
+Dominion Points, current turn/phase, the board, selected-piece/territory/card details, the
+card hand, an End Turn control, and an expandable event log.
+1.4.3. Three distinct context menus are required because three distinct selectable entities
+exist on the board: pieces, territories, and hand cards; each has its own valid-action set.
+1.4.4. Every action that changes game state irrevocably (movement, attack, card play,
+upgrade purchase, end turn) requires the two-step select-then-confirm interaction pattern.
+1.4.5. The Settings screen is the only place the palette-variant toggle (see
+002_game_aesthetics.txt Section 1.6.3.2) is exposed to the player.
+
+1.5. Philosophical Preamble
+A menu is the player's first and most frequent conversation with the rules engine; if that
+conversation is ambiguous, the underlying rigor of the engine is wasted. Every context menu
+in X Paradox X exists to make the legal-action set visible before it is chosen, consistent
+with the design pillar that structure protects creativity (003_game_philosophy.txt Section
+1.6.1) and that legibility is a first-class requirement (003_game_philosophy.txt Section
+1.6.4).
+
+1.6. Screen Inventory
+| Screen | Purpose |
+|--------|---------|
+| Main Menu | Entry point: Play, How to Play, Settings, Credits |
+| How to Play | Static/scrollable rules summary, links into 017_game_rules.txt content |
+| Game | Active match: board, status bars, hand, event log |
+| Settings | Palette-variant toggle, audio (if present), debug-panel access in development builds |
+| Results | Victory condition reached, winner, Play Again / Main Menu options |
+
+1.7. Main Menu Structure
+1.7.1. X Paradox X logo (see 002_game_aesthetics.txt Section 1.10).
+1.7.2. Play — starts a new local pass-and-play match, prompting board-size selection
+(4x4/6x6/8x8/custom, per 017_game_rules.txt Section 1.6) before entering the Game screen.
+1.7.3. How to Play — opens the static rules-summary screen.
+1.7.4. Settings — opens the Settings screen (Section 1.11).
+1.7.5. Credits — static attribution screen.
+1.7.6. Continue Game — shown only when an autosaved match exists (see
+015_game_deployment.txt persistence notes); otherwise hidden, not disabled-and-visible.
+
+1.8. Game Screen Layout
+
+1.8.1. Desktop/Landscape Layout
+A three-column layout: left column shows selected-unit stats/abilities/upgrade options;
+center column shows the board; right column shows the turn/event log. A top bar shows both
+players' credits and Dominion Points plus the current turn number and phase name. A bottom
+bar shows the card hand and the End Turn control, carried forward unchanged from
+chat_record_30072026.md Section 4's ASCII wireframe.
+
+1.8.2. Narrow/Mobile Layout
+The board occupies the visual center; player status data collapses into a top bar; the card
+hand becomes a horizontally scrollable bottom tray; piece/territory/card details open in a
+bottom sheet rather than a side column; the turn/event log opens via an explicit button
+rather than remaining always visible, carried forward unchanged from
+chat_record_30072026.md Section 4.
+
+1.9. Interaction and Confirmation Model
+1.9.1. First tap/click on a piece selects it: valid movement tiles pulse softly, attackable
+enemies receive a crosshair icon, invalid tiles remain visually unchanged.
+1.9.2. Tapping/clicking a valid destination tile previews the action; a second tap/click
+confirms it. This two-step model applies identically to movement, attacks, card targeting,
+and upgrade purchases.
+1.9.3. For cards: first tap/click inspects the card; tapping "Play" begins target selection;
+a second confirmation resolves the effect and writes an event-log entry.
+1.9.4. Deselecting (tapping the same piece/card again, or an empty non-valid tile) cancels
+the pending action without side effects.
+1.9.5. No irreversible action may be performed from a single, un-previewed input, per
+003_game_philosophy.txt Section 1.7.2.
+
+1.10. Context Menus
+
+1.10.1. Piece Context Menu
+Shown on selecting a friendly piece during the Action phase: Move, Attack (if a legal target
+exists), Build Upgrade (Bishop only, per 017_game_rules.txt Section 1.7.7), Cancel.
+
+1.10.2. Territory Context Menu
+Shown on selecting an owned, undefended territory during the Action phase: Purchase Upgrade
+(Fortress/Market/Relay, if affordable and no existing upgrade), View Territory Info, Cancel.
+
+1.10.3. Card Context Menu
+Shown on tapping a hand card: Inspect, Play (opens target selection if the card requires a
+target), Cancel.
+
+1.11. Settings Screen
+1.11.1. Palette variant toggle: Dark (Variant A) / Light (Variant B), per
+002_game_aesthetics.txt Section 1.6.
+1.11.2. Reset Match (with a confirmation dialog, since this is destructive).
+1.11.3. Debug Panel access, development builds only, per 009_game_unit_tests.txt Section
+1.9.
+
+1.12. Results Screen
+1.12.1. Displays the winning condition achieved (territory majority, King capture, or
+Dominion Points threshold, per 017_game_rules.txt Section 1.10) in one plain-language
+sentence.
+1.12.2. Offers Play Again and Main Menu controls; no action on this screen may silently
+resume the finished match, per 003_game_philosophy.txt's deterministic-engine pillar
+(no post-victory state mutation, see 009_game_unit_tests.txt Section 1.6.13).
+
+1.13. Summary Table
+| Screen/Menu | Key Controls |
+|--------------|----------------|
+| Main Menu | Play, How to Play, Settings, Credits, (Continue Game if available) |
+| Game | Board, status bars, hand, event log, End Turn |
+| Piece Context Menu | Move, Attack, Build Upgrade, Cancel |
+| Territory Context Menu | Purchase Upgrade, View Info, Cancel |
+| Card Context Menu | Inspect, Play, Cancel |
+| Settings | Palette toggle, Reset Match, Debug Panel (dev only) |
+| Results | Winning condition, Play Again, Main Menu |
+
+1.14. Reconciliation Table
+| Source | Prior Statement | Current Canon | Status |
+|--------|------------------|-----------------|--------|
+| chat_record_30072026.md Section 4 | ASCII wireframe for desktop/mobile Game screen | Retained as authoritative layout description (1.8) | Reconciled |
+| chat_record_30072026.md Section 4 | Generic "select then confirm" interaction description | Formalized as the two-step confirmation model (1.9) with piece/territory/card-specific rules | Reconciled |
+| (New) | No explicit context-menu spec existed | Three context menus defined (1.10) to satisfy this file's own name | Added |
+
+1.15. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Accidental irreversible action via single tap | Medium | High | Mandatory two-step confirm model (1.9) enforced in the rules engine, not just the UI |
+| Context menu exposing an illegal action (e.g. Attack with no valid target) | Medium | Medium | Context menu options are generated from the rules engine's legal-action query, never hardcoded per screen |
+| Narrow-layout users losing access to the event log | Low | Medium | Explicit log-open button required in 1.8.2, not an omission |
+
+1.16. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain screen inventory and layouts | R | C | A | I |
+| Maintain context-menu legal-action wiring | R | C/A | A | I |
+
+1.17. Conclusion
+The menu and context-menu system gives the player an unambiguous, two-step-confirmed path to
+every legal action, in both desktop/landscape and narrow/mobile layouts, without exposing any
+action the rules engine would reject.
+
+1.18. References and Citations
+1.18.1. Internal: game_specifications/0000_documentation_standards.txt §1.1-1.14.
+1.18.2. Internal: chatGPT_records/chat_record_30072026.md Section 4 (User-interface
+structure, 2026-07-30).
+1.18.3. Internal: game_specifications/002_game_aesthetics.txt (visual language referenced by
+tile/piece/card state indicators).
+1.18.4. Internal: game_specifications/017_game_rules.txt (legal-action source of truth for
+all context menus).
+
+1.19. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-30 | Documentation Agent | Initial creation: screen inventory, menu structure, interaction model, and the three required context menus. | Major |
