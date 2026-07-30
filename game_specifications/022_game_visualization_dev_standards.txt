@@ -1,0 +1,1 @@
+Follow aesthetic standards document -- single image per instance, and in PNG format only. All relevant screenshots must be included in the game specification document, with clear captions and references to the relevant sections of the text.

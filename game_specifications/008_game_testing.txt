@@ -1,0 +1,4 @@
+100% coverage, 100% pass rate as baseline standard. 
+Modularization is encouraged. 
+Clean code, SOLID, ACID, JPL 10 principles must be adhered to. 
+Unit test, pytest, behave and other testing frameworks must be used to ensure code quality.
