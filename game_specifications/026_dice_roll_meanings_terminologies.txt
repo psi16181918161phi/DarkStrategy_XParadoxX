@@ -1,0 +1,134 @@
+1. Dice Roll Meanings and Terminologies (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Scope and Authority
+1.7. Dice Notation Standard
+1.8. Combat Roll Contract
+1.9. Outcome Terminology
+1.10. Probability Baseline
+1.11. Logging and Audit Terminology
+1.12. Summary Table
+1.13. Reconciliation Table
+1.14. Risk and Mitigation Table
+1.15. Roles and Responsibilities (RACI)
+1.16. Conclusion
+1.17. References and Citations
+1.18. Changelog Table
+
+1.1. Abstract
+This document defines dice terminology and semantic meaning for all d6-based resolutions in
+X Paradox X. It standardizes notation, roll interpretation, and logging vocabulary so that
+design, implementation, and testing teams use one shared language for probabilistic events.
+
+1.2. Key Words
+d6, dice roll, attack total, defence total, contested roll, deterministic ordering, outcome
+state, random seed, audit log, probability baseline.
+
+1.3. Executive Summary
+X Paradox X uses six-sided dice (d6) as bounded randomness in combat and selected special
+effects. This file defines the canonical terms and equations that map rolls to outcomes,
+based on the combat contract in 017_game_rules.txt Section 1.7.3. It also defines required
+logging fields so each roll can be replayed and verified.
+
+1.4. Key Findings
+1.4.1. The system uses d6 only in MVP scope; no polyhedral variants are active.
+1.4.2. Combat outcomes are determined by comparing two totals, not by raw face values alone.
+1.4.3. Roll semantics must be logged as structured events to preserve auditability.
+1.4.4. Terminology drift (e.g., "block" vs "defence") is a reconciliation risk and is banned.
+
+1.5. Philosophical Preamble
+Chance is allowed in Dark Strategy only when it can be explained after the fact. A die roll
+is not a black box event; it is a state transition with evidence.
+
+1.6. Scope and Authority
+1.6.1. This file governs terms and meaning, not balance tuning.
+1.6.2. Balance changes that alter equations belong in 017_game_rules.txt first, then here.
+
+1.7. Dice Notation Standard
+1.7.1. d6 means one six-sided die returning an integer in [1,6].
+1.7.2. Xd6 means the sum of X independent six-sided dice.
+1.7.3. "Roll" refers to one sampled result; "total" refers to stat plus roll value.
+1.7.4. "Reroll" means discarding a prior sampled value and replacing it with one new sample,
+where allowed by a card effect.
+
+1.8. Combat Roll Contract
+1.8.1. attacker_total = attacker_attack + d6.
+1.8.2. defender_total = defender_defence + d6.
+1.8.3. If attacker_total > defender_total: defender loses 2 HP.
+1.8.4. If attacker_total = defender_total: both lose 1 HP.
+1.8.5. If attacker_total < defender_total: attacker loses 1 HP.
+1.8.6. A unit at 0 HP is removed from play.
+
+1.9. Outcome Terminology
+1.9.1. Critical Pressure: attacker_total - defender_total >= 4 (analytics label only).
+1.9.2. Standard Win: attacker_total - defender_total in [1,3].
+1.9.3. Tie Clash: attacker_total = defender_total.
+1.9.4. Defensive Hold: defender_total - attacker_total in [1,3].
+1.9.5. Defensive Overmatch: defender_total - attacker_total >= 4 (analytics label only).
+1.9.6. Labels in 1.9 are reporting vocabulary and do not alter damage rules.
+
+1.10. Probability Baseline
+1.10.1. For a single d6, P(face=n)=1/6 for n in {1,2,3,4,5,6}.
+1.10.2. With equal attack/defence stats and no modifiers, tie probability is 1/6.
+1.10.3. With equal stats, attacker and defender have symmetric win/loss probabilities.
+
+1.11. Logging and Audit Terminology
+1.11.1. Required fields per roll event:
+1.11.1.1. event_id.
+1.11.1.2. turn_id.
+1.11.1.3. actor_piece_id and target_piece_id.
+1.11.1.4. attacker_attack and defender_defence base stats.
+1.11.1.5. attacker_roll and defender_roll raw values.
+1.11.1.6. attacker_total and defender_total.
+1.11.1.7. outcome_label from Section 1.9.
+1.11.1.8. hp_delta_applied.
+1.11.2. Field names should align with 021_game_data_standards.txt naming guidance.
+
+1.12. Summary Table
+| Topic | Rule |
+|------|------|
+| Dice type | d6 only (MVP) |
+| Combat equation | attack+roll vs defence+roll |
+| Tie handling | both lose 1 HP |
+| Audit requirement | log raw rolls, totals, and applied deltas |
+| Reporting labels | analytics-only labels do not change rules |
+
+1.13. Reconciliation Table
+| Prior State | Current State | Status |
+|-------------|----------------|--------|
+| File existed but was empty | Fully populated with notation, semantics, and logging contract | Reconciled |
+| Dice details were scattered in rules narrative | Consolidated terminology reference file created | Reconciled |
+
+1.14. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Inconsistent term usage across modules/tests | Medium | Medium | Enforce glossary in this file and lint checks in tests |
+| Missing roll fields in logs preventing replay | Medium | High | Require 1.11 field contract in integration tests |
+| Misinterpretation of analytics labels as gameplay rules | Low | Medium | Explicitly mark 1.9 labels as non-mechanical |
+
+1.15. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain dice terminology | R | C | A | I |
+| Validate logging schema alignment | C | R | A | I |
+| Approve semantic rule changes | C | R | A | A/Stakeholder |
+
+1.16. Conclusion
+This file provides a single vocabulary and equation contract for all d6-based behavior,
+reducing ambiguity across implementation, QA, and analytics.
+
+1.17. References and Citations
+1.17.1. Internal: game_specifications/0000_documentation_standards.txt §1.6.
+1.17.2. Internal: game_specifications/000_index.txt.
+1.17.3. Internal: game_specifications/017_game_rules.txt §1.7.3.
+1.17.4. Internal: game_specifications/020_game_logging_standards.txt.
+1.17.5. Internal: game_specifications/021_game_data_standards.txt.
+
+1.18. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-31 | Documentation Agent | Initial population of previously empty dice terminology and meaning specification. | Major |
+

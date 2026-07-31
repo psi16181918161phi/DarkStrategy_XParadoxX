@@ -1,0 +1,155 @@
+1. Game Asset Creation Instructions (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Scope and Authority
+1.7. Asset Taxonomy
+1.8. Style and Aesthetic Constraints
+1.9. File Formats and Technical Constraints
+1.10. Naming and Versioning Rules
+1.11. Source Attribution and Licensing Controls
+1.12. Asset QA and Acceptance Checklist
+1.13. Integration Workflow with Engineering
+1.14. Summary Table
+1.15. Reconciliation Table
+1.16. Risk and Mitigation Table
+1.17. Roles and Responsibilities (RACI)
+1.18. Conclusion
+1.19. References and Citations
+1.20. Changelog Table
+
+1.1. Abstract
+This document defines how visual and audio assets for X Paradox X are created, named,
+validated, and integrated into the repository. It operationalizes aesthetic intent from
+002_game_aesthetics.txt into production-ready asset standards for development and release.
+
+1.2. Key Words
+asset pipeline, sprite, icon, board tile, UI panel, typography, palette, export format,
+attribution, license compliance, QA checklist.
+
+1.3. Executive Summary
+Assets must be stylistically consistent with Dark Strategy visual canon and technically
+consistent with engineering ingestion requirements. This file defines asset categories,
+required formats, naming/versioning conventions, source-attribution obligations, and a QA
+gate checklist that blocks non-compliant assets from integration.
+
+1.4. Key Findings
+1.4.1. Aesthetic consistency is mandatory and derived from 002_game_aesthetics.txt.
+1.4.2. Technical consistency (format, dimensions, transparency rules) is mandatory for runtime
+stability and cross-platform behavior.
+1.4.3. Every asset requires provenance metadata and license compatibility verification.
+1.4.4. The asset QA checklist is a release gate, not an optional review note.
+
+1.5. Philosophical Preamble
+In strategy games, readability is strategy. An asset is not decoration alone; it is an
+interface contract between system state and player decision-making.
+
+1.6. Scope and Authority
+1.6.1. This file governs creation and acceptance of non-code assets.
+1.6.2. Code-level integration details are governed by 006_game_scaffolding.txt and
+023_game_modules_imports.txt.
+1.6.3. If style conflicts occur, 002_game_aesthetics.txt is the visual source of truth.
+
+1.7. Asset Taxonomy
+1.7.1. UI assets: menus, buttons, panels, overlays, HUD widgets.
+1.7.2. Board assets: tile textures, territory markers, ownership highlights.
+1.7.3. Piece assets: iconography, unit badges, health/status overlays.
+1.7.4. Card assets: suit-class indicators, rank-tier visual markers, card templates.
+1.7.5. FX assets: hit markers, shield pulses, economy gain popups.
+1.7.6. Audio assets: UI click sounds, combat cues, ambience loops.
+
+1.8. Style and Aesthetic Constraints
+1.8.1. Palette usage must conform to dark/light variants defined in 002_game_aesthetics.txt.
+1.8.2. Contrast ratio for gameplay-critical UI text/elements must be readable at default zoom.
+1.8.3. Icons must remain identifiable at small sizes (minimum 24x24 px use-case).
+1.8.4. Visual motifs should reinforce "controlled chaos" without reducing tactical clarity.
+
+1.9. File Formats and Technical Constraints
+1.9.1. Raster images: PNG for alpha-support assets; JPG only for non-transparent backgrounds.
+1.9.2. Vector assets: SVG for scalable UI iconography where runtime supports it.
+1.9.3. Animations: sprite sheets or JSON-driven frame manifests, documented per asset pack.
+1.9.4. Audio: WAV for source masters; OGG/MP3 for runtime delivery depending on platform needs.
+1.9.5. Every asset pack must include a manifest with dimensions, format, and usage context.
+
+1.10. Naming and Versioning Rules
+1.10.1. Naming convention: <category>_<domain>_<descriptor>_v<major>_<minor>.<ext>.
+1.10.2. Examples:
+1.10.2.1. ui_menu_mainpanel_v1_0.png.
+1.10.2.2. board_tile_home_01_v1_2.png.
+1.10.2.3. card_overlay_spades_high_v1_0.svg.
+1.10.3. Breaking visual changes increment major version; additive refinements increment minor.
+
+1.11. Source Attribution and Licensing Controls
+1.11.1. Every third-party-derived asset must include source URL/path and license type.
+1.11.2. Assets with incompatible commercial or redistribution terms are prohibited.
+1.11.3. AI-generated assets must record prompt, model/tool identity, and generation date.
+1.11.4. Trademarked third-party logos/characters are prohibited unless formally licensed.
+
+1.12. Asset QA and Acceptance Checklist
+1.12.1. Visual conformance checks:
+1.12.1.1. Palette compliance.
+1.12.1.2. Typography and spacing consistency.
+1.12.1.3. Readability at 100% and 75% scale.
+1.12.2. Technical checks:
+1.12.2.1. Correct file format.
+1.12.2.2. No corrupt files.
+1.12.2.3. Manifest completeness.
+1.12.3. Governance checks:
+1.12.3.1. Provenance metadata present.
+1.12.3.2. License compatibility verified.
+1.12.3.3. Naming/versioning compliant.
+
+1.13. Integration Workflow with Engineering
+1.13.1. Asset branch preparation and review.
+1.13.2. QA checklist execution and sign-off.
+1.13.3. Manifest and references added to repository.
+1.13.4. Integration test pass for asset loading and fallback behavior.
+
+1.14. Summary Table
+| Topic | Rule |
+|------|------|
+| Style source | 002_game_aesthetics.txt |
+| Main raster format | PNG |
+| Naming | category_domain_descriptor_vMajor_Minor |
+| Required metadata | source, license, generation/provenance details |
+| QA gate | visual + technical + governance checks |
+
+1.15. Reconciliation Table
+| Prior State | Current State | Status |
+|-------------|----------------|--------|
+| File existed but was empty | Fully populated with asset creation and governance instructions | Reconciled |
+| Asset guidance was implicit across docs | Unified asset pipeline document created | Reconciled |
+
+1.16. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Inconsistent visual identity across screens | Medium | High | Enforce palette/style checks in 1.12 |
+| Asset licensing non-compliance | Medium | High | Mandatory provenance and license checks in 1.11 |
+| Runtime failures due to malformed assets | Low | High | Technical QA checks and integration tests |
+
+1.17. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Define asset standards | R | C | A | I |
+| Validate incoming asset packs | C | R | A | I |
+| Approve exceptions to asset policy | C | R | A | A/Stakeholder |
+
+1.18. Conclusion
+This file makes the asset pipeline deterministic, auditable, and compatible with both design
+intent and engineering constraints.
+
+1.19. References and Citations
+1.19.1. Internal: game_specifications/0000_documentation_standards.txt §1.6.
+1.19.2. Internal: game_specifications/000_index.txt.
+1.19.3. Internal: game_specifications/002_game_aesthetics.txt.
+1.19.4. Internal: game_specifications/006_game_scaffolding.txt.
+1.19.5. Internal: game_specifications/022_game_visualization_dev_standards.txt.
+1.19.6. Internal: game_specifications/023_game_modules_imports.txt.
+
+1.20. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-31 | Documentation Agent | Initial population of previously empty game asset creation instructions file. | Major |
+

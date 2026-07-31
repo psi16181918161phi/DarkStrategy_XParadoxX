@@ -1,0 +1,123 @@
+1. Monopoly Integration Specification (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Scope and Authority
+1.7. Imported Monopoly Concepts
+1.8. Adaptation Rules for X Paradox X
+1.9. Explicit Non-Imports
+1.10. Integration Points in Game Loop
+1.11. Balancing Boundaries
+1.12. Summary Table
+1.13. Reconciliation Table
+1.14. Risk and Mitigation Table
+1.15. Roles and Responsibilities (RACI)
+1.16. Conclusion
+1.17. References and Citations
+1.18. Changelog Table
+
+1.1. Abstract
+This document defines how Monopoly-inspired territory and economy mechanics are integrated
+into X Paradox X without importing Monopoly as a whole ruleset. It isolates what is adopted,
+what is transformed, and what is explicitly excluded.
+
+1.2. Key Words
+Monopoly integration, territory ownership, income, upgrade economy, Dominion Points,
+hybrid strategy, rule boundaries.
+
+1.3. Executive Summary
+X Paradox X integrates Monopoly-like ideas at the systems level: own territory, gain income,
+and invest in upgrades. It does not import Monopoly movement, board topology, card decks,
+or bankruptcy rules. Integration is constrained to a bounded economic layer that coexists
+with chess-piece tactics, dice combat, and 52-card ability effects.
+
+1.4. Key Findings
+1.4.1. Territory ownership and recurring income are the primary imported concepts.
+1.4.2. Upgrade investment mirrors property development in spirit, not in literal mechanics.
+1.4.3. No Monopoly trademarked labels are required to operate the rules system.
+1.4.4. Integration is intentionally partial to preserve X Paradox X identity.
+
+1.5. Philosophical Preamble
+Integration means selective borrowing, not imitation. The goal is strategic depth from
+economic pressure, while preserving the distinct logic of Dark Strategy gameplay.
+
+1.6. Scope and Authority
+1.6.1. This file documents conceptual integration boundaries.
+1.6.2. Numeric and turn-by-turn mechanic authority remains in 017_game_rules.txt.
+1.6.3. If a conflict exists, 017_game_rules.txt is authoritative.
+
+1.7. Imported Monopoly Concepts
+1.7.1. Territorial ownership as a persistent state.
+1.7.2. Recurring economic benefit from owned territory.
+1.7.3. Optional reinvestment into territory upgrades.
+1.7.4. Economic advantage as a route toward match victory pressure.
+
+1.8. Adaptation Rules for X Paradox X
+1.8.1. "Rent" is adapted into turn-based credits gained during Income phase.
+1.8.2. Property set completion mechanics are replaced by board-control and hold-duration logic.
+1.8.3. Building upgrades map to Fortress, Market, and Relay as defined in 017_game_rules.txt.
+1.8.4. Economic outcomes feed Dominion Points rather than cash-only win conditions.
+
+1.9. Explicit Non-Imports
+1.9.1. No roll-and-move traversal around a Monopoly loop board.
+1.9.2. No Chance/Community Chest equivalent as a required subsystem.
+1.9.3. No mortgage, auction, or bankruptcy mechanics in MVP.
+1.9.4. No jail, tax, railroad, or utility subsystem import.
+
+1.10. Integration Points in Game Loop
+1.10.1. Income phase: credits awarded per owned territory.
+1.10.2. Action phase: optional upgrade purchase on eligible territory.
+1.10.3. End-of-turn evaluation: hold-duration contributes to Dominion Points progression.
+
+1.11. Balancing Boundaries
+1.11.1. Economy must not dominate tactical play to the point that board positioning becomes
+irrelevant.
+1.11.2. Tactical combat must remain able to disrupt economic snowball states.
+1.11.3. AI adviser recommendations should explain economic opportunity cost explicitly.
+
+1.12. Summary Table
+| Topic | Integration Decision |
+|------|-----------------------|
+| Ownership | Imported concept |
+| Income | Imported and adapted to credits |
+| Upgrades | Imported in spirit, remapped to game-specific upgrades |
+| Monopoly movement model | Explicitly excluded |
+| Bankruptcy/mortgage systems | Explicitly excluded |
+
+1.13. Reconciliation Table
+| Prior State | Current State | Status |
+|-------------|----------------|--------|
+| File existed but was empty | Fully populated with integration boundaries and adaptation rules | Reconciled |
+| Monopoly influence was implicit in scattered text | Unified formal integration document created | Reconciled |
+
+1.14. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Over-association with Monopoly causes brand confusion | Medium | Medium | Keep non-import list explicit and use X Paradox X terminology |
+| Economy overpowering tactical core | Medium | High | Balance via playtests and tune upgrade costs/income rates |
+| Inconsistent interpretation across docs | Low | Medium | Cross-reference 017 and this file in future economy edits |
+
+1.15. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain integration boundary spec | R | C | A | I |
+| Validate gameplay consistency with core rules | C | R | A | I |
+| Approve scope expansion of imported concepts | C | R | A | A/Stakeholder |
+
+1.16. Conclusion
+Monopoly integration in X Paradox X is a bounded economic layer, not a wholesale rules import,
+and this distinction is now explicit and enforceable.
+
+1.17. References and Citations
+1.17.1. Internal: game_specifications/0000_documentation_standards.txt §1.6.
+1.17.2. Internal: game_specifications/000_index.txt.
+1.17.3. Internal: game_specifications/017_game_rules.txt §1.8 and §1.9.
+1.17.4. Internal: game_specifications/010_game_player_statistics.txt.
+
+1.18. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-31 | Documentation Agent | Initial population of previously empty Monopoly integration specification. | Major |
+

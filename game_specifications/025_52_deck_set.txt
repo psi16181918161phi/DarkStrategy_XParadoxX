@@ -1,0 +1,156 @@
+1. 52-Card Deck Set Specification (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Scope and Authority
+1.7. Deck Composition
+1.8. Suit-to-Class Mapping
+1.9. Rank-to-Magnitude Mapping
+1.10. Draw, Discard, and Reshuffle Lifecycle
+1.11. Hand and Play Constraints
+1.12. Card Resolution Contract
+1.13. Summary Table
+1.14. Reconciliation Table
+1.15. Risk and Mitigation Table
+1.16. Roles and Responsibilities (RACI)
+1.17. Conclusion
+1.18. References and Citations
+1.19. Changelog Table
+
+1.1. Abstract
+This document defines the canonical 52-card deck specification for X Paradox X and serves as
+the implementation-facing companion to game_specifications/017_game_rules.txt Section 1.10.
+It formalizes deck composition, suit/class mapping, rank/magnitude mapping, and lifecycle
+rules for draw/discard/reshuffle, so the backend rules engine and frontend UI cannot diverge
+on card behavior.
+
+1.2. Key Words
+52-card deck, suit mapping, rank mapping, ability card, draw pile, discard pile, reshuffle,
+card resolution, bounded randomness, Dark Strategy.
+
+1.3. Executive Summary
+X Paradox X uses one shared standard 52-card deck (no jokers). Suits define ability classes
+(Hearts=Defence, Spades=Attack, Diamonds=Economy, Clubs=Chaos), and ranks define effect
+magnitudes through a tier system aligned with the canon declared in 017_game_rules.txt.
+This document provides the exact operational contract for card lifecycle, hand constraints,
+and deterministic resolution order when card effects interact with dice combat and territory
+economy systems.
+
+1.4. Key Findings
+1.4.1. The deck is strictly standard (52 cards, no replacement cards, no jokers).
+1.4.2. Suit/class mapping is sourced canon and is not adjustable per match in MVP mode.
+1.4.3. Rank/magnitude mapping is fixed to tiered outputs to keep balance legible and testable.
+1.4.4. Draw/discard/reshuffle behavior must be deterministic at the state-transition level,
+even though the card order itself is randomized.
+1.4.5. This file is the authoritative implementation detail for deck behavior, while
+017_game_rules.txt remains the gameplay canon source.
+
+1.5. Philosophical Preamble
+A standard deck is a language players already understand. X Paradox X does not replace that
+language; it remaps it. The design goal is controlled surprise: enough uncertainty to create
+interesting decisions, but never so much that outcomes become opaque or unauditable.
+
+1.6. Scope and Authority
+1.6.1. This file governs only card-system behavior.
+1.6.2. If this file conflicts with 017_game_rules.txt, 017_game_rules.txt wins and this file
+must be reconciled in the same change set.
+1.6.3. If this file conflicts with implementation details in code, this file and the code must
+both be reviewed against 017_game_rules.txt before release.
+
+1.7. Deck Composition
+1.7.1. Total cards: 52.
+1.7.2. Suits: Hearts, Spades, Diamonds, Clubs.
+1.7.3. Ranks per suit: Ace, 2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King.
+1.7.4. Jokers: excluded.
+1.7.5. The active deck state is represented by three collections:
+1.7.5.1. Draw pile (face down, ordered stack).
+1.7.5.2. Discard pile (face up, ordered stack by resolution timestamp).
+1.7.5.3. Hands (per-player card collections).
+
+1.8. Suit-to-Class Mapping
+| Suit | Ability Class | Canonical Effect Domain |
+|------|----------------|-------------------------|
+| Hearts | Defence | Shielding, mitigation, restoration |
+| Spades | Attack | Damage, offensive pressure |
+| Diamonds | Economy | Credits, resource acceleration |
+| Clubs | Chaos | Controlled disruption or state perturbation |
+
+1.9. Rank-to-Magnitude Mapping
+| Rank Range | Tier | Magnitude Contract |
+|------------|------|--------------------|
+| 2-6 | Low | 1 unit effect |
+| 7-10 | Medium | 2 unit effect |
+| J, Q, K | High | 3 unit effect or one bounded special effect |
+| Ace | Wild | Player chooses one legal tier effect in the drawn suit's class |
+
+1.10. Draw, Discard, and Reshuffle Lifecycle
+1.10.1. Each turn begins with exactly one mandatory draw in the Draw phase.
+1.10.2. Resolved cards move to discard pile immediately after effect resolution.
+1.10.3. If the draw pile is empty when a draw is required, the discard pile is shuffled and
+becomes the new draw pile; the previous draw pile remains empty.
+1.10.4. If both draw and discard piles are empty, no draw occurs and an audit event is logged
+under 020_game_logging_standards.txt.
+
+1.11. Hand and Play Constraints
+1.11.1. Hand limit (MVP default): 5 cards.
+1.11.2. If a mandatory draw would exceed the hand limit, the player draws first then discards
+one card immediately to the discard pile.
+1.11.3. A player may play at most one card per turn in MVP mode unless a future rules update
+explicitly changes this cap.
+
+1.12. Card Resolution Contract
+1.12.1. Resolution order for a played card is: legality check -> target binding -> magnitude
+derivation -> effect execution -> state persistence -> logging.
+1.12.2. When a card effect and combat effect both modify HP in the same Action phase, card
+effect resolution occurs first, then combat resolution, unless a specific card text states
+"after combat".
+1.12.3. All card resolutions must emit an event record with suit, rank, tier, source player,
+target entities, and resulting state delta.
+
+1.13. Summary Table
+| Topic | Rule |
+|------|------|
+| Deck size | 52 cards, no jokers |
+| Mapping | Suit=class, rank=tier magnitude |
+| Draw cadence | 1 mandatory draw per turn |
+| Hand limit | 5 (MVP default) |
+| Reshuffle | Discard reshuffled into draw when draw is empty |
+| Resolution order | legality -> target -> magnitude -> execute -> persist -> log |
+
+1.14. Reconciliation Table
+| Prior State | Current State | Status |
+|-------------|----------------|--------|
+| File existed but was empty | Fully populated with deck contract and lifecycle rules | Reconciled |
+| Early ideation referenced bespoke 24-card set | Canon locked to standard 52-card deck with suit/rank mapping | Reconciled |
+
+1.15. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Deck state desynchronization between backend and UI | Medium | High | Use 1.12 event contract and integration tests in 011_game_integration_tests.txt |
+| Ambiguity around Ace behavior | Medium | Medium | Treat Ace as explicit wild-tier selector only (1.9) |
+| Hand-limit edge cases causing illegal states | Low | Medium | Enforce draw-then-discard protocol (1.11.2) |
+
+1.16. Roles and Responsibilities (RACI)
+| Activity | Author (Agent) | Reviewer | Maintainer | Stakeholder |
+|----------|-----------------|----------|------------|-------------|
+| Maintain deck spec | R | C | A | I |
+| Validate rules-engine alignment | C | R | A | I |
+| Approve canonical mapping changes | C | R | A | A/Stakeholder |
+
+1.17. Conclusion
+This document converts the deck mechanic from a high-level concept into a strict operational
+contract suitable for implementation, testing, and audit.
+
+1.18. References and Citations
+1.18.1. Internal: game_specifications/0000_documentation_standards.txt §1.6.
+1.18.2. Internal: game_specifications/000_index.txt §1.6 and §1.13.
+1.18.3. Internal: game_specifications/017_game_rules.txt §1.10.
+1.18.4. Internal: game_specifications/020_game_logging_standards.txt.
+
+1.19. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-31 | Documentation Agent | Initial population of previously empty file with canonical 52-card deck specification. | Major |
+
