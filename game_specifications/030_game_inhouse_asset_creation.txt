@@ -1,0 +1,300 @@
+1. In-House Asset Creation and Governance (Table of Contents)
+1.1. Abstract
+1.2. Key Words
+1.3. Executive Summary
+1.4. Key Findings
+1.5. Philosophical Preamble
+1.6. Scope and Authority
+1.7. In-House Asset Workflow
+1.8. Toolchain and Environment Standards
+1.9. Asset Creation Best Practices
+1.10. Version Control and Asset Lineage
+1.11. Quality Gates and Acceptance Criteria
+1.12. Tool-Specific Conventions
+1.13. Team Collaboration and Review Process
+1.14. Summary Table
+1.15. Reconciliation Table
+1.16. Risk and Mitigation Table
+1.17. Roles and Responsibilities (RACI)
+1.18. Conclusion
+1.19. References and Citations
+1.20. Changelog Table
+
+1.1. Abstract
+This document defines the internal (in-house) asset creation workflow, toolchain standards,
+and governance policies for visual and audio asset production by X Dark X internal team
+members. It extends 029_game_asset_creation_instructions.txt by operationalizing the
+creation process itself, establishing tool requirements, iteration discipline, and
+collaboration protocols to ensure assets meet technical and aesthetic specifications
+before handoff to engineering integration.
+
+1.2. Key Words
+in-house creation, tool standards, asset workflow, iteration discipline, version control,
+asset lineage, review gate, collaboration, source asset, export pipeline, creative
+governance.
+
+1.3. Executive Summary
+In-house asset creation is governed by a defined toolchain, documented iteration process,
+source-asset version control, and a multi-stage review gate. Every creator must track
+source files, respect version naming, document design decisions, participate in peer
+review, and pass QA before assets enter integration. This ensures that creative output
+is traceable, auditable, and reproducible across team members and time.
+
+1.4. Key Findings
+1.4.1. All in-house asset creation must occur in designated tools (listed in Section 1.8).
+1.4.2. Source assets (PSD, XCF, BLEND, SVG, etc.) must be version-controlled separately
+from exports.
+1.4.3. Every in-house creator must maintain a personal or feature-branch asset lineage log
+documenting rationale, iteration history, and design decisions.
+1.4.4. Exported assets (PNG, JPG, SVG finals, OGG/WAV) must conform to 029's technical
+constraints before entry into the QA gate.
+1.4.5. Peer review is mandatory; solo creation without review is non-compliant.
+
+1.5. Philosophical Preamble
+Art without process is inspiration; process without art is bureaucracy. In-house asset
+creation walks this line by establishing sufficient rigor to ensure reproducibility and
+team coherence, while preserving creative iteration as the heartbeat of the pipeline.
+Source files are the creative workspace; exports are the production artifact. The two must
+be kept distinct and reconciled at every step.
+
+1.6. Scope and Authority
+1.6.1. This document governs the creation phase only; acceptance and integration are
+governed by 029_game_asset_creation_instructions.txt.
+1.6.2. Tool selection and environment setup are governed by 007_game_virtual_env.txt and
+006_game_scaffolding.txt.
+1.6.3. If process conflicts with 029 occur, 029 is the source of truth for final QA.
+1.6.4. This document does not govern contracted or third-party asset workflows (see 029
+for third-party provenance controls).
+
+1.7. In-House Asset Workflow
+1.7.1. Workflow Phases
+1.7.1.1. Planning: Asset request issued with reference to design doc (e.g., 002_game_aesthetics.txt)
+and category/descriptor.
+1.7.1.2. Creation: Creator opens source file in approved tool, iterates, and documents
+decisions in a lineage log (1.7.2).
+1.7.1.3. Export: Creator exports to target format(s) per 029, versioned and named per
+Section 1.10.
+1.7.1.4. Self-Review: Creator fills out self-review checklist (1.7.3) and commits all
+source + export + metadata to version control.
+1.7.1.5. Peer Review: A second team member reviews source, exports, and checklist
+(1.7.4). Approval is recorded in RACI tracking.
+1.7.1.6. QA Gate: Asset passes 029's checklist (1.12); if failed, returned to creator
+with itemized defect list.
+1.7.1.7. Integration: Approved asset is moved to integration branch and registered in
+asset manifest.
+1.7.2. Asset Lineage Log (Creator Responsibility)
+1.7.2.1. Every in-house asset source file must have an accompanying lineage log, named
+<asset_descriptor>_LINEAGE.md, in the same directory.
+1.7.2.2. Lineage log format: markdown, with sections for:
+1.7.2.2.1. Asset name and category.
+1.7.2.2.2. Primary designer/creator.
+1.7.2.2.3. Date created and all revision dates.
+1.7.2.2.4. Link to design spec source (e.g., 002_game_aesthetics.txt §X.Y).
+1.7.2.2.5. Version history: brief description of changes per version.
+1.7.2.2.6. Design rationale: one-paragraph explanation of the asset's role and intent.
+1.7.2.2.7. External inspirations or references (with attribution).
+1.7.2.2.8. Known limitations or TODOs.
+1.7.3. Creator Self-Review Checklist (1.7.3.1-1.7.3.5 must be signed off before peer review)
+1.7.3.1. Visual conformance: Does the asset match the style guide in 002_game_aesthetics.txt?
+1.7.3.2. Technical correctness: Does the asset meet file format, dimensions, and encoding
+requirements in 029 §1.9?
+1.7.3.3. Naming and versioning: Is the asset named per 029 §1.10 and 010 rules?
+1.7.3.4. Lineage documentation: Is the LINEAGE.md file complete and accurate?
+1.7.3.5. No unresolved TODOs: Are all placeholder/WIP markers resolved or escalated?
+1.7.4. Peer Review (Mandatory Before QA Gate)
+1.7.4.1. A second in-house team member (not the creator) must review source file,
+export quality, and self-review checklist.
+1.7.4.2. Peer reviewer must verify:
+1.7.4.2.1. Creator's self-review was thorough and accurate.
+1.7.4.2.2. No obvious visual inconsistencies with sibling assets or canon.
+1.7.4.2.3. Lineage log is credible and references are checkable.
+1.7.4.2.4. Exports match source intent (no export corruption, no accidental degradation).
+1.7.4.3. Peer review outcome: Approved, Approved with comments, or Rejected with defect list.
+1.7.4.4. Rejected assets are returned to creator with itemized feedback; approval is
+prerequisite to QA gate.
+
+1.8. Toolchain and Environment Standards
+1.8.1. Approved Tools for In-House Creation
+1.8.1.1. Raster/Photo Editing: Adobe Photoshop (preferred) or GIMP (open-source).
+1.8.1.2. Vector Graphics: Adobe Illustrator (preferred) or Inkscape (open-source).
+1.8.1.3. 3D/Sprite Animation: Blender (open-source) or Aseprite (commercial, lightweight).
+1.8.1.4. Audio Editing: Audacity (open-source) or Adobe Audition (preferred).
+1.8.1.5. Source format export to 029-compliant targets is mandatory from each tool.
+1.8.2. Environment Constraints
+1.8.2.1. All source files must be stored in version-controlled repository branch or
+tagged workspace.
+1.8.2.2. Asset creators must maintain a local work directory per 006_game_scaffolding.txt
+asset structure.
+1.8.2.3. No in-progress assets are checked into main/master until peer-reviewed and
+QA-gated.
+1.8.3. Tool-Specific Compliance
+1.8.3.1. Adobe-based creators must export using lossless or specified-lossy profiles to
+ensure cross-tool reproducibility.
+1.8.3.2. Open-source tool creators must document exact version and export settings in
+lineage log for reproducibility.
+1.8.3.3. All multi-layer source files must include a flattened preview export for quick
+visual verification without opening source.
+
+1.9. Asset Creation Best Practices
+1.9.1. Design Reference and Consistency
+1.9.1.1. Before creation, review 002_game_aesthetics.txt for palette, typography, and motif guidance.
+1.9.1.2. Maintain visual consistency with sibling assets (e.g., all UI buttons must use the same
+highlight treatment).
+1.9.1.3. Document any intentional deviations from canon in the lineage log with explicit
+rationale.
+1.9.2. Scalability and Accessibility
+1.9.2.1. Design at a base resolution where the asset is most frequently viewed; scale variants
+(thumbnail, full-size) are exports, not separate design passes.
+1.9.2.2. Test readability at 75%, 100%, and 125% scales; document minimum viable scale
+in lineage log.
+1.9.2.3. Ensure sufficient contrast for colorblind players; use a contrast-checking tool
+(e.g., WebAIM).
+1.9.3. Performance Considerations
+1.9.3.1. For animated assets, document frame count and target frame rate in lineage log.
+1.9.3.2. For large textures, discuss compression trade-offs with engineering before
+finalizing exports.
+1.9.3.3. Sprite sheets should be power-of-two dimensions where feasible (128, 256, 512, etc.).
+1.9.4. Iteration and Feedback Loops
+1.9.4.1. Creators are encouraged to request feedback on work-in-progress (WIP) before
+final peer review.
+1.9.4.2. WIP feedback does not constitute formal peer review; formal review is required
+before QA gate.
+1.9.4.3. Document all WIP feedback decisions in the lineage log.
+
+1.10. Version Control and Asset Lineage
+1.10.1. Repository Structure for In-House Assets
+1.10.1.1. Source assets are stored in /assets/sources/<category>/<asset_descriptor>/ directory.
+1.10.1.2. Export assets are staged in /assets/export_staging/<category>/ until QA approval,
+then moved to /assets/final/ per 006_game_scaffolding.txt.
+1.10.1.3. Lineage logs are stored alongside source files: <asset_descriptor>_LINEAGE.md.
+1.10.2. Branching Discipline
+1.10.2.1. Asset creation work must occur on a feature branch named
+feature/asset_<category>_<descriptor>.
+1.10.2.2. Branches are committed only after peer review approval is recorded.
+1.10.2.3. Merge to main requires QA gate sign-off recorded in commit message.
+1.10.3. Commit Message Format
+1.10.3.1. Format: [ASSET] <category>/<descriptor> v<major>.<minor>: <brief change description>.
+1.10.3.2. Example: [ASSET] ui/menu_mainpanel v1.3: refine shadow depth, peer-reviewed
+by Jane Doe.
+1.10.3.3. All commits must reference the associated lineage log revision.
+
+1.11. Quality Gates and Acceptance Criteria
+1.11.1. Pre-QA Gate (Creator and Peer Reviewer Responsibility)
+1.11.1.1. Source file is complete and free of corruption.
+1.11.1.2. Lineage log is current and accurate.
+1.11.1.3. Self-review and peer-review checklists are signed off.
+1.11.2. QA Gate (029 Compliance Check)
+1.11.2.1. Assets must pass all checks in 029 §1.12 (visual, technical, governance).
+1.11.2.2. Any failed check must be itemized and returned to creator with priority
+(blocker, critical, minor).
+1.11.2.3. Blocker/critical issues must be resolved before resubmission.
+1.11.3. Integration Gate (Engineering Review)
+1.11.3.1. Engineering verifies asset loading, fallback behavior, and no runtime errors.
+1.11.3.2. Asset manifest is updated per 029 and 006.
+1.11.3.3. Integration test coverage for asset loading is recorded in 009, 011, or 013
+as applicable.
+
+1.12. Tool-Specific Conventions
+1.12.1. Photoshop (.PSD)
+1.12.1.1. Layer naming must use descriptive, category-prefixed names (e.g., bg_base,
+ui_button_highlight, fx_glow).
+1.12.1.2. Layer organization: base layers at bottom, effects/overlays at top, with
+logical grouping via folders.
+1.12.1.3. Export profiles must be documented in lineage log; recommended: Photoshop
+export as PNG with maximum compression.
+1.12.2. Illustrator (.AI) / Inkscape (.SVG)
+1.12.2.1. Vector paths should use meaningful object names (e.g., shape_border, text_label).
+1.12.2.2. Exported SVG must test correctly in target game engine (Chrome/WebGL if web-based,
+or native if desktop).
+1.12.2.3. Complex nested paths should be documented in lineage log.
+1.12.3. Blender (.BLEND)
+1.12.3.1. Sprite sheet or animation exports must reference keyframe ranges in lineage log.
+1.12.3.2. Texture bakes should document material setup and target export resolution.
+1.12.4. Aseprite (.ASE)
+1.12.4.1. Frame timing and animation loops must be documented in lineage log.
+1.12.4.2. Sprite sheet export order and frame count must be clearly marked.
+1.12.5. Audio Sources (.WAV, .AIFF, .FLAC)
+1.12.5.1. Master recording must be 48 kHz or higher, stereo or mono (mono for SFX,
+stereo for ambience).
+1.12.5.2. Normalized to -3dB peak to avoid clipping in downstream processing.
+1.12.5.3. Exported delivery formats (OGG, MP3) must be documented with compression settings
+in lineage log.
+
+1.13. Team Collaboration and Review Process
+1.13.1. Communication Protocol
+1.13.1.1. Asset requests are logged in a shared tracker (e.g., GitHub Issues) with
+reference to design spec section.
+1.13.1.2. WIP feedback is conducted via code-review comments on draft PR or in-tool
+collaboration (e.g., Figma if used).
+1.13.1.3. Formal peer review is recorded as a GitHub PR review with Approve/Request Changes.
+1.13.2. Escalation Path for Conflicts
+1.13.2.1. If peer review and creator disagree on design direction, escalation is to the
+Design Lead (role TBD per RACI).
+1.13.2.2. Design Lead decision is recorded in lineage log and commit message.
+1.13.2.3. If QA gate fails on subjective aesthetic grounds, escalation is to Design Lead
++ QA Lead (roles TBD).
+1.13.3. Knowledge Transfer
+1.13.3.1. Upon onboarding a new in-house creator, assign a mentor to review their first
+two asset submissions in depth.
+1.13.3.2. Maintain a shared example library of "approved source files" in each tool,
+annotated with best practices.
+
+1.14. Summary Table
+| Topic | Rule |
+|------|------|
+| Source tools | Photoshop, GIMP, Illustrator, Inkscape, Blender, Aseprite, Audacity, Adobe Audition |
+| Version control | Feature branch, commit message format [ASSET]..., QA gate sign-off required |
+| Lineage log | Mandatory per asset, markdown format, tracks rationale and iteration |
+| Self-review | Creator checklist 1.7.3.1-1.7.3.5 must be signed before peer review |
+| Peer review | Mandatory, second team member, documented outcome |
+| QA gate | 029 compliance checks, itemized defect list if failed |
+| Naming | category_domain_descriptor_vMajor_Minor per 029 §1.10 |
+
+1.15. Reconciliation Table
+| Prior State | Current State | Status |
+|-------------|----------------|--------|
+| In-house asset creation process was implicit | Explicit workflow defined with phases, checklists, and review gates | Reconciled |
+| No lineage tracking for source files | Mandatory lineage logs in markdown per Section 1.7.2 | Reconciled |
+| No tool standards or environment governance | Tool list (1.8.1) and version control discipline (1.10) established | Reconciled |
+| Peer review optional | Peer review mandatory before QA gate per Section 1.7.4 | Reconciled |
+| Tool-specific conventions were ad-hoc | Section 1.12 defines conventions per tool (PSD, AI, SVG, BLEND, ASE, Audio) | Reconciled |
+
+1.16. Risk and Mitigation Table
+| Risk | Likelihood | Impact | Mitigation |
+|------|------------|--------|------------|
+| Asset quality varies by creator | Medium | High | Lineage logs and peer review enforce consistency |
+| Source files lost or corrupted | Low | High | Version control discipline and backup per 006 |
+| Iteration history is undocumented | Medium | Medium | Lineage logs and commit messages create audit trail |
+| Peer review is bypassed | Low | High | Branch protection rules require PR approval before merge |
+| Export settings inconsistent across team | Medium | Medium | Tool-specific conventions (1.12) and example library reduce drift |
+
+1.17. Roles and Responsibilities (RACI)
+| Activity | Creator | Peer Reviewer | Design Lead | QA Lead | Engineering |
+|----------|---------|-----------------|-------------|---------|------------|
+| Asset creation and self-review | R/A | I | I | I | I |
+| Lineage log maintenance | R/A | C | I | I | I |
+| Peer review execution | C | R/A | I | I | I |
+| Design conflict escalation | C | C | R/A | I | I |
+| QA gate execution | C | I | I | R/A | C |
+| Integration and testing | I | I | I | C | R/A |
+(R = Responsible, A = Accountable, C = Consulted, I = Informed)
+
+1.18. Conclusion
+In-house asset creation is now a governed, traceable, and collaborative process. Source
+files are versioned, lineage is documented, peer review is mandatory, and quality gates
+are enforced. This framework supports creative iteration while ensuring team coherence,
+auditability, and reproducibility.
+
+1.19. References and Citations
+1.19.1. Internal: game_specifications/0000_documentation_standards.txt §1.0–1.14.
+1.19.2. Internal: game_specifications/000_index.txt.
+1.19.3. Internal: game_specifications/002_game_aesthetics.txt.
+1.19.4. Internal: game_specifications/006_game_scaffolding.txt.
+1.19.5. Internal: game_specifications/007_game_virtual_env.txt.
+1.19.6. Internal: game_specifications/029_game_asset_creation_instructions.txt §1.0–1.20.
+1.19.7. External (illustrative): WebAIM color contrast checker (https://webaim.org/resources/contrastchecker/).
+
+1.20. Changelog Table
+| Version | Date | Author (Agent/Role) | Change Description | Type |
+|---------|------|----------------------|---------------------|------|
+| 2026.00.00.00 | 2026-07-31 | Documentation Agent | Initial population of in-house asset creation and governance document, extending 029 with detailed workflow, toolchain standards, lineage tracking, and collaboration protocols. | Major |
